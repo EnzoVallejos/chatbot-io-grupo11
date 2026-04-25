@@ -67,13 +67,93 @@
 
   Modelos de Programación Dinámica: Distribución de inversiones, Ruta óptima, Gastos de campaña publicitaria
 
+# Tipos de modelos generales
+  Mentales: representaciones internas que una persona tiene sobre un sistema o problema, basadas en su experiencia y conocimiento.
 
-# Modelos de IO. Matemáticos y de simulación. Elementos. Fases de los estudios de I.O Datos y cálculos en I.O.
+  Abstractos: modelos que representan la realidad de forma conceptual o simbólica.
 
-# Decisiones en condiciones de certeza, riesgo e incertidumbre.
+  * Simbólicos: utilizan símbolos o lenguaje para describir el sistema.
+  * Matemáticos: emplean expresiones y relaciones matemáticas para representar el problema.
 
-# Medidas de eficiencia y utilidad.
+  Físicos: representaciones tangibles del sistema real.
 
-#Decisiones programables y no programables
+  * Icónicos: reproducen físicamente el sistema, generalmente a escala.
+  * Analógicos: representan el sistema mediante otro con comportamiento similar.
 
-#Sistemas de apoyo a las decisiones. Utilidad y aplicación. Diseño y características
+  Biológicos: modelos que reproducen sistemas de materia animada y los procesos asociados a ella.
+
+  Praxiológicos: modelos orientados a la eficacia de la acción y a la interacción entre componentes del sistema.
+
+  Lógicos: modelos que representan procesos o funciones que pueden expresarse mediante operaciones formales.
+
+  Económicos: modelos relacionados con producción, consumo, comercio, planeamiento y control.
+
+  Determinísticos: modelos en los que no interviene el azar; los resultados están completamente determinados por los datos de entrada.
+
+  Probabilísticos: modelos que incorporan incertidumbre y utilizan variables aleatorias para representar el sistema.
+
+  Descriptivos: modelos que describen el comportamiento del sistema sin buscar optimizarlo.
+
+  Optimizantes: modelos que buscan la mejor solución posible según un criterio (máximo o mínimo).
+
+  Numéricos: modelos que se resuelven mediante cálculos computacionales o iterativos.
+
+  Analíticos: modelos que se resuelven mediante deducción matemática y expresiones cerradas.
+
+  Simulación: modelos que imitan el comportamiento del sistema real para analizar su funcionamiento.
+
+  Regresión: modelos que analizan la relación entre variables para realizar estimaciones o predicciones.
+
+  Varianza: modelos que estudian la dispersión de los datos y la variabilidad del sistema.
+
+  Valor actual: modelos que evalúan flujos de dinero en el tiempo considerando su valor presente.
+
+# Tipos de modelos gerenciales
+  Funcionales: describen el proceso como una serie de lugares físicos donde ocurren actividades.
+
+  Declarativos: se basan en la construcción de un Grafo de Transiciones de Estado (GTE) para representar los objetos del modelo.
+
+  Cognitivos: están orientados a la comprensión del sistema, su estructura funcional, procesos y relaciones.
+
+  Instrumentales: se utilizan para operar el sistema, requiriendo conocer los valores de las variables de decisión en cada momento.
+
+  Básicos: representan las características principales de las entidades y sus relaciones.
+
+  De gestión: incluyen las características necesarias para administrar el modelo.
+
+  De crecimiento: enfatizan las relaciones que permiten o producen el desarrollo del sistema.
+
+# Pasos en la construccion del modelos
+
+  Definir el objetivo, Identificar criterios de evaluación, Enumerar variables y restricciones (Identificar las variables controlables, Identificar las variables incontrolables), Prever comportamiento de las incontrolables y su margen de error, Analizar relaciones entre las variables, objetivos y resultados, Identificar restricciones de las variables controlables, Desarrollar un plan de acción acorde al análisis 
+
+# Tipos de decisiones
+  Segun el problema: programables, no programables.
+  Segun la informacion disponible: certeza, riesgo (incertidumbre parcial), incertidumbre (incertidumbre completa)
+
+# Sistemas de Apoyo a las Decisiones 
+  Sistemas Transaccionales
+  
+  Sistemas de Soporte a la Toma de Decisiones( DSS) 
+  
+  Sistemas de Información para Ejecutivos (EIS )
+
+  Sistemas para la Toma de Decisiones en Grupo (GDSS )
+  
+  Sistemas Expertos de Soporte a la Toma de Decisiones ( EDSS)
+  
+  Redes Neurales Artificiales ( ANN )
+  
+  Sistemas de Soporte Híbridos ( HSS )
+
+  Sistemas informáticos interactivos que ayudan a decidir usando datos y modelos para la resolución de problemas no estructurados o semiestructurados. Están controlados por uno o más decisores y utilizan herramientas que ofrecen alternativas y resultados posibles
+
+  Características generales: Uso frecuente, Usuarios diferentes, Posibilidades de acoplamientos, Simplicidad y rápido acceso, Concepción desarrollo y uso conducido por el usuario final, Comunicación dentro de la organización, Comunicación con el ambiente, Decisiones simultáneas, Descentralización de las decisiones
+
+  Componentes: Sistema de administración de la Base de Datos, Sistema de Administración de Modelos, Sistema de administración de Diálogos.
+ 
+  Sistema de administración de la Base de Datos: Desarrollo de un Modelo de Datos, Debe combinar información de distintas fuentes y orígenes, Captura automática, Acceso, preguntas y muestra de datos, Bases relacionales, DW, OLAP y DM.
+
+  Sistema de Administración de Modelos: Stocks y aprovisionamiento, Control de proyectos, Líneas de espera, Planificación de la producción, Transporte, Competencia, Análisis y asignación de inversiones, Circuitos de distribución y recorridos, Modelos de compra, Asignación de personal.
+
+   Sistema de administración de Diálogos: Estilos de presentación, Cuadros, Gráficos, Listados, Planillas, Manejo de dispositivos de salida
