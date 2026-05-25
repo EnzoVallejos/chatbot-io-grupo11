@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OptimBot</title>
+  <title>OptimBot - Sistema Integrado de Investigación Operativa</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,372 +23,652 @@
       --teal: #1D9E75;
       --teal-bg: rgba(29,158,117,0.1);
       --teal-text: #5DCAA5;
-      --mono: 'DM Mono', monospace;
-      --sans: 'Syne', sans-serif;
+      --purple: #8B5CF6;
+      --purple-bg: rgba(139,92,246,0.1);
+      --purple-text: #A78BFA;
+      
+      /* Variables del evaluador de ejercicios */
+      --green-bg: rgba(29,158,117,0.1);
+      --green-t: #5DCAA5;
+      --red-bg: rgba(220,38,38,0.1);
+      --red-t: #F87171;
+      --amber-bg: rgba(217,119,6,0.1);
+      --amber-t: #FBBF24;
     }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
-      font-family: var(--sans);
-      min-height: 100vh;
+      font-family: 'DM+Mono', monospace;
+      height: 100vh;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 1rem;
+      align-items: center;
+      overflow: hidden;
     }
 
-    .window {
+    .chat-container {
       width: 100%;
-      max-width: 520px;
+      max-width: 800px;
+      height: 100vh;
       background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: 90vh;
-      max-height: 700px;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
     }
 
-    .titlebar {
-      background: var(--surface2);
+    /* Header */
+    header {
+      padding: 20px 24px;
       border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
+      justify-content: space-between;
     }
-
-    .tbar-dots { display: flex; gap: 6px; }
-    .tbar-dots span { width: 10px; height: 10px; border-radius: 50%; }
-
-    .avatar {
-      width: 32px; height: 32px;
+    header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    header h1 span {
+      color: var(--blue);
+    }
+    .status-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #10b981;
       border-radius: 50%;
-      background: var(--blue-bg);
-      border: 1px solid rgba(55,138,221,0.3);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
     }
 
-    .avatar svg { width: 16px; height: 16px; stroke: var(--blue-text); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-
-    .tbar-info { flex: 1; }
-    .tbar-name { font-size: 13px; font-weight: 700; color: var(--text); }
-    .tbar-sub { font-size: 11px; color: var(--text-muted); font-family: var(--mono); }
-
-    .online-dot { width: 8px; height: 8px; border-radius: 50%; background: #60f09a; flex-shrink: 0; }
-
-    .messages {
+    /* Lista de mensajes */
+    .messages-list {
       flex: 1;
       overflow-y: auto;
-      padding: 16px;
+      padding: 24px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      scroll-behavior: smooth;
+      gap: 20px;
     }
 
-    .messages::-webkit-scrollbar { width: 4px; }
-    .messages::-webkit-scrollbar-track { background: transparent; }
-    .messages::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
-
-    .msg { display: flex; flex-direction: column; gap: 6px; max-width: 86%; }
-    .msg.bot { align-self: flex-start; }
-    .msg.user { align-self: flex-end; }
+    /* Burbujas base */
+    .msg-row {
+      display: flex;
+      width: 100%;
+      animation: fadeIn 0.2s ease-out forwards;
+    }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.bot { justify-content: flex-start; }
 
     .bubble {
-      padding: 10px 14px;
-      font-size: 14px;
-      line-height: 1.55;
-      border-radius: 14px;
+      max-width: 85%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .msg-row.user .bubble {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border-hover);
+      border-bottom-right-radius: 2px;
+    }
+    .msg-row.bot .bubble {
+      background: transparent;
+      color: var(--text);
+      border-bottom-left-radius: 2px;
     }
 
-    .msg.bot .bubble {
+    /* Bloque de texto preformateado (Machete/Guías/Ejemplos) */
+    .response-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text-mid);
+      max-width: 100%;
+    }
+
+    /* Diseño estructurado del Evaluador de Prácticas */
+    .eval-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 12px;
+      width: 100%;
+    }
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .eval-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .eval-score {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+    .eval-section {
+      margin-bottom: 14px;
+    }
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-comment {
+      font-size: 0.85rem;
+      color: var(--text-mid);
+      padding-left: 14px;
+      border-left: 2px solid var(--border);
+    }
+    .eval-list {
+      margin-top: 4px;
+      padding-left: 18px;
+      font-size: 0.85rem;
+      color: var(--text-mid);
+    }
+    .eval-list li {
+      margin-bottom: 4px;
+    }
+
+    /* CHIPS / BOTONES DE CONTROL */
+    .chips-container {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .chip {
       background: var(--surface2);
       border: 1px solid var(--border);
       color: var(--text);
-      border-bottom-left-radius: 4px;
-    }
-
-    .msg.user .bubble {
-      background: var(--blue-bg);
-      border: 1px solid rgba(55,138,221,0.25);
-      color: var(--blue-text);
-      border-bottom-right-radius: 4px;
-    }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
-
-    .chip {
-      padding: 7px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--border-hover);
-      background: transparent;
-      font-family: var(--sans);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-mid);
-      cursor: pointer;
-      transition: all 0.13s ease;
-      display: flex; align-items: center; gap: 6px;
-    }
-
-    .chip:hover { background: var(--surface2); color: var(--text); border-color: rgba(255,255,255,0.3); }
-    .chip:disabled { opacity: 0.35; cursor: default; pointer-events: none; }
-
-    .chip.guia { border-color: rgba(55,138,221,0.5); color: var(--blue-text); }
-    .chip.guia:hover { background: var(--blue-bg); border-color: var(--blue); }
-
-    .chip.ejemplo { border-color: rgba(29,158,117,0.5); color: var(--teal-text); }
-    .chip.ejemplo:hover { background: var(--teal-bg); border-color: var(--teal); }
-
-    .typing {
-      display: flex; gap: 4px; align-items: center;
-      padding: 10px 14px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px; border-bottom-left-radius: 4px;
-      width: fit-content;
-    }
-
-    .tdot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--text-muted);
-      animation: tdot 1.1s infinite;
-    }
-    .tdot:nth-child(2) { animation-delay: 0.18s; }
-    .tdot:nth-child(3) { animation-delay: 0.36s; }
-    @keyframes tdot { 0%,80%,100%{transform:translateY(0);opacity:0.5} 40%{transform:translateY(-5px);opacity:1} }
-
-    .response-block {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.8;
-      color: var(--text-mid);
-      white-space: pre-wrap;
-      word-break: break-word;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    .response-block::-webkit-scrollbar { width: 3px; }
-    .response-block::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
-
-    .back-btn {
-      background: none; border: none;
-      font-family: var(--sans); font-size: 12px;
-      color: var(--text-muted); cursor: pointer;
-      padding: 0; display: flex; align-items: center; gap: 4px;
-      margin-top: 2px;
-    }
-    .back-btn:hover { color: var(--text); }
-
-    .err { color: #f09595; font-size: 13px; line-height: 1.5; }
-    .err code { font-family: var(--mono); font-size: 11px; }
-
-    .footer-bar {
-      border-top: 1px solid var(--border);
-      padding: 10px 16px;
-      display: flex; align-items: center; gap: 8px;
-      flex-shrink: 0;
-    }
-
-    .footer-input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 999px;
       padding: 8px 14px;
-      font-family: var(--sans);
-      font-size: 13px;
-      color: var(--text-muted);
-      pointer-events: none;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
+    .chip:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+    }
+    
+    /* Variantes por Modo */
+    .chip.guia-mode:hover { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
+    .chip.ejemplo-mode:hover { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal); }
+    .chip.practica-mode:hover { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple); }
+
+    /* Input Area */
+    .input-container {
+      padding: 16px 24px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .input-wrapper {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      padding: 4px 6px 4px 16px;
+      transition: border-color 0.2s ease;
+    }
+    .input-wrapper:focus-within {
+      border-color: var(--border-hover);
+    }
+    .input-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      padding: 8px 0;
+    }
+    .input-wrapper input::placeholder {
+      color: var(--text-muted);
+    }
+    .input-wrapper input:disabled {
+      cursor: not-allowed;
+    }
+    .send-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .send-btn.active {
+      color: var(--blue);
+      background: var(--blue-bg);
+    }
+    .send-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    /* Animaciones y utilidades */
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 4px 8px;
+      align-items: center;
+    }
+    .typing-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
   </style>
 </head>
 <body>
 
-<div class="window">
-  <div class="titlebar">
-    <div class="tbar-dots">
-      <span style="background:#f06060"></span>
-      <span style="background:#f0c060"></span>
-      <span style="background:#60f09a"></span>
+  <div class="chat-container">
+    <header>
+      <h1>Optim<span>Bot</span></h1>
+      <div class="status-badge">
+        <div class="status-dot"></div>
+        <span>IO API v1.0 Activa</span>
+      </div>
+    </header>
+
+    <main class="messages-list" id="messages"></main>
+
+    <div class="input-container">
+      <div class="input-wrapper">
+        <input type="text" id="chat-input" placeholder="Escribí tu resolución aquí..." disabled />
+        <button class="send-btn" id="send-button" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
     </div>
-    <div class="avatar">
-      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    </div>
-    <div class="tbar-info">
-      <div class="tbar-name">OptimBot</div>
-      <div class="tbar-sub">guías de optimización lineal</div>
-    </div>
-    <div class="online-dot"></div>
   </div>
 
-  <div class="messages" id="messages"></div>
+  <script>
+    const BASE = "http://localhost:3000";
+    const msgs = document.getElementById('messages');
+    const inp = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-button');
 
-  <div class="footer-bar">
-    <div class="footer-input">seleccioná una opción arriba...</div>
-  </div>
-</div>
+    // Modos integrados que eliminan la redundancia entre los dos archivos antiguos
+    const MODOS = [
+      { key: 'guia', label: '📖 Guía Teórica', desc: 'Preguntas base para modelar.', cls: 'guia-mode' },
+      { key: 'ejemplo', label: '💡 Ver Ejemplo', desc: 'Problemas resueltos paso a paso.', cls: 'ejemplo-mode' },
+      { key: 'practica', label: '🧠 Práctica RAG', desc: 'Resolver un escenario con corrección de IA.', cls: 'practica-mode' }
+    ];
 
-<script>
-const BASE = 'http://localhost:3000';
-const msgs = document.getElementById('messages');
-let modoActual = null;
+    const TIPOS = [
+      { key: 'transporte', label: 'Transporte', icon: '🚚' },
+      { key: 'asignacion', label: 'Asignación', icon: '👥' },
+      { key: 'financiero', label: 'Financiero', icon: '📈' },
+      { key: 'produccion', label: 'Producción', icon: '🏭' },
+      { key: 'mezcla', label: 'Mezcla', icon: '🧪' }
+    ];
 
-const TIPOS = [
-  { key: 'transporte',  label: 'Transporte',  icon: '🚛' },
-  { key: 'asignacion',  label: 'Asignación',  icon: '👥' },
-  { key: 'financiero',  label: 'Financiero',  icon: '💰' },
-  { key: 'produccion',  label: 'Producción',  icon: '🏭' },
-  { key: 'mezcla',      label: 'Mezcla',      icon: '🧪' },
-];
+    // Variables de control de estado interno
+    let modoActual = null;     // 'guia' | 'ejemplo' | 'practica'
+    let currentTipo = null;    // 'transporte' | 'asignacion' | etc.
+    let currentEscenario = null; // Guardará el objeto de escenario devuelto por el RAG
+    let state = 'modo';        // 'modo' | 'tipo' | 'resolucion'
+    let waiting = false;
 
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    // --- Helpers DOM ---
+    function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
 
-function scrollDown() {
-  setTimeout(() => { msgs.scrollTop = msgs.scrollHeight; }, 60);
-}
+    function addBotMsg() {
+      const row = document.createElement('div');
+      row.className = 'msg-row bot';
+      msgs.appendChild(row);
+      return row;
+    }
 
-function addBotMsg() {
-  const el = document.createElement('div');
-  el.className = 'msg bot';
-  msgs.appendChild(el);
-  scrollDown();
-  return el;
-}
+    function addUserMsg(text) {
+      const row = document.createElement('div');
+      row.className = 'msg-row user';
+      row.innerHTML = `<div class="bubble">${text}</div>`;
+      msgs.appendChild(row);
+      scrollDown();
+    }
 
-function addUserMsg(text) {
-  const el = document.createElement('div');
-  el.className = 'msg user';
-  const b = document.createElement('div');
-  b.className = 'bubble';
-  b.textContent = text;
-  el.appendChild(b);
-  msgs.appendChild(el);
-  scrollDown();
-}
+    async function botSay(html) {
+      const el = addBotMsg();
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      b.innerHTML = html;
+      el.appendChild(b);
+      scrollDown();
+      return b;
+    }
 
-function makeBubble(html) {
-  const b = document.createElement('div');
-  b.className = 'bubble';
-  b.innerHTML = html;
-  return b;
-}
+    function makeTyping() {
+      const el = addBotMsg();
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      b.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+      el.appendChild(b);
+      return b;
+    }
 
-function makeTyping() {
-  const el = document.createElement('div');
-  el.className = 'msg bot';
-  const t = document.createElement('div');
-  t.className = 'typing';
-  t.innerHTML = '<div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>';
-  el.appendChild(t);
-  msgs.appendChild(el);
-  scrollDown();
-  return el;
-}
+    function makeChips(items, onClick) {
+      const container = document.createElement('div');
+      container.className = 'chips-container';
+      items.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = `chip ${item.cls || ''}`;
+        btn.innerHTML = item.label;
+        btn.onclick = () => {
+          container.querySelectorAll('button').forEach(b => b.disabled = true);
+          onClick(item);
+        };
+        container.appendChild(btn);
+      });
+      return container;
+    }
 
-function makeChips(items, onClick) {
-  const c = document.createElement('div');
-  c.className = 'chips';
-  items.forEach(item => {
-    const btn = document.createElement('button');
-    btn.className = 'chip ' + (item.cls || '');
-    btn.innerHTML = item.label;
-    btn.onclick = () => {
-      c.querySelectorAll('.chip').forEach(b => b.disabled = true);
-      onClick(item);
-    };
-    c.appendChild(btn);
-  });
-  return c;
-}
+    // --- Flujos de Conversación ---
+    async function init() {
+      modoActual = null;
+      currentTipo = null;
+      currentEscenario = null;
+      state = 'modo';
+      waiting = false;
+      
+      inp.disabled = true;
+      inp.placeholder = 'Seleccioná una opción arriba...';
+      sendBtn.classList.remove('active');
 
-function makeBack() {
-  const btn = document.createElement('button');
-  btn.className = 'back-btn';
-  btn.innerHTML = '← volver al inicio';
-  btn.onclick = () => {
-    msgs.innerHTML = '';
-    modoActual = null;
+      const b = await botSay("¡Hola! Soy <strong>OptimBot</strong>, tu asistente de Investigación Operativa. ¿Qué te gustaría hacer hoy?");
+      b.appendChild(makeChips(MODOS, item => {
+        addUserMsg(item.label);
+        modoActual = item.key;
+        state = 'tipo';
+        mostrarTipos();
+      }));
+    }
+
+    async function mostrarTipos() {
+      let msgText = `Perfecto. ¿De qué familia de problemas querés ver la <strong>guía teórica</strong>?`;
+      if (modoActual === 'ejemplo') msgText = `Entendido. ¿De qué tipo de problema querés revisar un <strong>ejemplo resuelto</strong>?`;
+      if (modoActual === 'practica') msgText = `¡Excelente elección! Vamos a practicar con IA. Seleccioná el modelo de problema a resolver:`;
+
+      const b = await botSay(msgText);
+      b.appendChild(makeChips(TIPOS.map(t => ({
+        ...t,
+        label: `${t.icon} ${t.label}`,
+        cls: modoActual === 'guia' ? 'guia-mode' : modoActual === 'ejemplo' ? 'ejemplo-mode' : 'practica-mode'
+      })), async item => {
+        addUserMsg(item.label);
+        currentTipo = item.key;
+        
+        if (modoActual === 'practica') {
+          await levantarEscenarioRAG();
+        } else {
+          await mostrarContenidoEstatico();
+        }
+      }));
+    }
+
+    // Flujo para Guías y Ejemplos (Texto Plano)
+    async function mostrarContenidoEstatico() {
+      const url = `${BASE}/api/${modoActual}/${currentTipo}`;
+      const t = makeTyping();
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        t.remove();
+
+        const el = addBotMsg();
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        b.innerHTML = `Acá tenés el material solicitado para <strong>${currentTipo}</strong>:`;
+        
+        const rb = document.createElement('div');
+        rb.className = 'response-block';
+        rb.textContent = text;
+        
+        b.appendChild(rb);
+        el.appendChild(b);
+
+        // Ofrecer reiniciar flujo de forma elegante
+        ofrecerBotonVolver(b);
+      } catch (err) {
+        t.remove();
+        await botSay(`<span style="color:var(--red-t)">⚠️ Error de conexión: No se pudo obtener la información de ${url}. Comprobá que el servidor esté encendido.</span>`);
+        ofrecerBotonVolver(msgs);
+      }
+    }
+
+    // Flujo Inteligente de Práctica (RAG)
+    async function levantarEscenarioRAG() {
+      const url = `${BASE}/api/ejercicio/escenario/${currentTipo}`;
+      const t = makeTyping();
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        currentEscenario = await res.json();
+        t.remove();
+
+        const el = addBotMsg();
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        b.innerHTML = `Muy bien. He recuperado un escenario para vos.<br><br><strong>Problema: ${currentEscenario.titulo}</strong><br><em>${currentEscenario.descripcion}</em>`;
+        
+        const rb = document.createElement('div');
+        rb.className = 'response-block';
+        rb.textContent = currentEscenario.datos;
+        
+        b.appendChild(rb);
+        el.appendChild(b);
+
+        await botSay("Leé atentamente los datos de arriba. Ahora redactá tus <strong>Variables de decisión, Función Objetivo y Restricciones</strong> en la caja de texto inferior y envíamelas.");
+        
+        state = 'resolucion';
+        inp.disabled = false;
+        inp.placeholder = 'Escribí detalladamente tu resolución...';
+        inp.focus();
+      } catch (err) {
+        t.remove();
+        await botSay(`<span style="color:var(--red-t)">⚠️ Error: No se pudo recuperar ningún escenario desde ${url}.</span>`);
+        ofrecerBotonVolver(msgs);
+      }
+    }
+
+    async function enviarResolucionAlEvaluador() {
+      const text = inp.value.trim();
+      if (!text || waiting) return;
+
+      addUserMsg(text);
+      inp.value = '';
+      inp.disabled = true;
+      sendBtn.disabled = true;
+      sendBtn.classList.remove('active');
+      waiting = true;
+
+      const t = makeTyping();
+
+      try {
+        const res = await fetch(`${BASE}/api/ejercicio/evaluar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tipo: currentTipo,
+            escenario: currentEscenario,
+            resolucion: text
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const evalResult = await res.json();
+        t.remove();
+
+        // Determinar color de la tarjeta según puntaje
+        let scoreColor = 'var(--green-t)';
+        let scoreBg = 'var(--green-bg)';
+        if (evalResult.puntaje < 50) { scoreColor = 'var(--red-t)'; scoreBg = 'var(--red-bg)'; }
+        else if (evalResult.puntaje < 75) { scoreColor = 'var(--amber-t)'; scoreBg = 'var(--amber-bg)'; }
+
+        // Renderizado semántico y elegante de la evaluación del LLM
+        const el = addBotMsg();
+        const card = document.createElement('div');
+        card.className = 'eval-card';
+        card.innerHTML = `
+          <div class="eval-header">
+            <div class="eval-title">Evaluación del Profesor Virtual</div>
+            <div class="eval-score" style="background:${scoreBg}; color:${scoreColor}">${evalResult.puntaje}/100 (${evalResult.nivel})</div>
+          </div>
+          
+          <div class="eval-section">
+            <div class="section-label" style="color: ${evalResult.variables_decision.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
+              ${evalResult.variables_decision.correcto ? '✓' : '✗'} Variables de Decisión
+            </div>
+            <div class="section-comment">${evalResult.variables_decision.comentario}</div>
+          </div>
+
+          <div class="eval-section">
+            <div class="section-label" style="color: ${evalResult.funcion_objetivo.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
+              ${evalResult.funcion_objetivo.correcto ? '✓' : '✗'} Función Objetivo
+            </div>
+            <div class="section-comment">${evalResult.funcion_objetivo.comentario}</div>
+          </div>
+
+          <div class="eval-section">
+            <div class="section-label" style="color: ${evalResult.restricciones.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
+              ${evalResult.restricciones.correcto ? '✓' : '✗'} Restricciones Matemáticas
+            </div>
+            <div class="section-comment">${evalResult.restricciones.comentario}</div>
+          </div>
+
+          <div class="eval-section" style="margin-top: 16px;">
+            <div class="section-label" style="color:var(--blue-text)">🎯 Puntos Fuertes:</div>
+            <ul class="eval-list">${evalResult.que_estuvo_bien.map(i => `<li>${i}</li>`).join('') || '<li>Ninguno destacado.</li>'}</ul>
+          </div>
+
+          <div class="eval-section">
+            <div class="section-label" style="color:var(--amber-t)">⚠️ Oportunidades de Mejora:</div>
+            <ul class="eval-list">${evalResult.que_mejorar.map(i => `<li>${i}</li>`).join('') || '<li>¡Nada que mejorar! Excelente.</li>'}</ul>
+          </div>
+
+          <div class="eval-section" style="border-top:1px solid var(--border); padding-top:12px; margin-bottom:0;">
+            <div class="section-label" style="color:var(--text-muted)">Resumen General:</div>
+            <p style="font-size:0.85rem; color:var(--text-mid); line-height:1.4;">${evalResult.resumen}</p>
+          </div>
+        `;
+        el.appendChild(card);
+        scrollDown();
+
+        // Controles de reintento o salida
+        const b = await botSay("¿Qué te gustaría hacer ahora?");
+        b.appendChild(makeChips([
+          { key: 'reintentar', label: '↩️ Intentar de nuevo este ejercicio', cls: 'practica-mode' },
+          { key: 'nuevo', label: '✨ Pedir otro escenario', cls: 'teal-mode' },
+          { key: 'menu', label: '🏠 Ir al Menú Principal', cls: '' }
+        ], item => {
+          if (item.key === 'reintentar') {
+            addUserMsg("Quiero reintentar este ejercicio.");
+            waiting = false;
+            state = 'resolucion';
+            inp.disabled = false;
+            inp.placeholder = 'Corregí tu resolución anterior...';
+            inp.focus();
+          } else if (item.key === 'nuevo') {
+            addUserMsg("Quiero otro escenario de este tipo.");
+            levantarEscenarioRAG();
+          } else {
+            addUserMsg("Volver al inicio.");
+            init();
+          }
+        }));
+
+      } catch (err) {
+        t.remove();
+        await botSay(`<span style="color:var(--red-t)">❌ Error al evaluar: Asegurate de tener Ollama levantado en local con el modelo Mistral activo.</span>`);
+        waiting = false;
+        state = 'resolucion';
+        inp.disabled = false;
+        inp.placeholder = 'Reintentar enviar resolución...';
+      }
+    }
+
+    function ofrecerBotonVolver(parentEl) {
+      parentEl.appendChild(makeChips([{ key: 'inicio', label: '🏠 Volver al Inicio', cls: '' }], () => {
+        addUserMsg("Volver al Inicio");
+        init();
+      }));
+      scrollDown();
+    }
+
+    // --- Controladores de Eventos del Input ---
+    inp.addEventListener('input', () => {
+      if (inp.value.trim().length > 0) {
+        sendBtn.disabled = false;
+        sendBtn.classList.add('active');
+      } else {
+        sendBtn.disabled = true;
+        sendBtn.classList.remove('active');
+      }
+    });
+
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey && state === 'resolucion' && !waiting) {
+        e.preventDefault();
+        enviarResolucionAlEvaluador();
+      }
+    });
+
+    sendBtn.addEventListener('click', () => {
+      if (state === 'resolucion' && !waiting) {
+        enviarResolucionAlEvaluador();
+      }
+    });
+
+    // Arrancar la app
     init();
-  };
-  return btn;
-}
-
-async function botSay(html, delay = 650) {
-  const t = makeTyping();
-  await sleep(delay);
-  t.remove();
-  const el = addBotMsg();
-  el.appendChild(makeBubble(html));
-  scrollDown();
-  return el;
-}
-
-async function init() {
-  const m = await botSay('¡Hola! Soy <strong>OptimBot</strong>.<br>¿Qué tipo de información necesitás?');
-  m.appendChild(makeChips([
-    { key: 'guia',    label: '📖 Guía teórica',    cls: 'guia' },
-    { key: 'ejemplo', label: '💡 Ejemplo práctico', cls: 'ejemplo' },
-  ], async item => {
-    modoActual = item.key;
-    addUserMsg(item.key === 'guia' ? 'Guía teórica' : 'Ejemplo práctico');
-    await mostrarTipos();
-  }));
-  scrollDown();
-}
-
-async function mostrarTipos() {
-  const label = modoActual === 'guia' ? 'guía' : 'ejemplo';
-  const m = await botSay(`Perfecto. ¿De qué tipo de problema querés ver la <strong>${label}</strong>?`);
-  m.appendChild(makeChips(TIPOS.map(t => ({
-    ...t,
-    label: `${t.icon} ${t.label}`,
-    cls: modoActual,
-  })), async item => {
-    addUserMsg(item.label);
-    await mostrarRespuesta(item.key, item.label);
-  }));
-  scrollDown();
-}
-
-async function mostrarRespuesta(tipo, labelTipo) {
-  const url = `${BASE}/api/${modoActual}/${tipo}`;
-  const t = makeTyping();
-  scrollDown();
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-    t.remove();
-    const el = addBotMsg();
-    el.appendChild(makeBubble(`Acá tenés el resultado para <strong>${labelTipo.replace(/[^\w\sáéíóúñÁÉÍÓÚÑ]/g,'').trim()}</strong>:`));
-    const rb = document.createElement('div');
-    rb.className = 'response-block';
-    rb.textContent = text;
-    el.appendChild(rb);
-    el.appendChild(makeBack());
-    scrollDown();
-  } catch(e) {
-    t.remove();
-    const el = addBotMsg();
-    el.appendChild(makeBubble(`<span class="err">No pude conectarme al servidor.<br>Verificá que el backend esté corriendo en <code>${BASE}</code> y que tenga CORS habilitado.</span>`));
-    el.appendChild(makeBack());
-    scrollDown();
-  }
-}
-
-init();
-</script>
+  </script>
 </body>
 </html>
