@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OptimBot - Sistema Integrado de Investigación Operativa</title>
+  <title>OptimBot - Panel Educativo Completo</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,8 +26,10 @@
       --purple: #8B5CF6;
       --purple-bg: rgba(139,92,246,0.1);
       --purple-text: #A78BFA;
+      --orange: #EA580C;
+      --orange-bg: rgba(234,88,12,0.1);
+      --orange-text: #F97316;
       
-      /* Variables del evaluador de ejercicios */
       --green-bg: rgba(29,158,117,0.1);
       --green-t: #5DCAA5;
       --red-bg: rgba(220,38,38,0.1);
@@ -49,7 +51,7 @@
 
     .chat-container {
       width: 100%;
-      max-width: 800px;
+      max-width: 850px;
       height: 100vh;
       background: var(--surface);
       display: flex;
@@ -58,7 +60,6 @@
       border-right: 1px solid var(--border);
     }
 
-    /* Header */
     header {
       padding: 20px 24px;
       border-bottom: 1px solid var(--border);
@@ -70,11 +71,9 @@
       font-family: 'Syne', sans-serif;
       font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: -0.02em;
     }
-    header h1 span {
-      color: var(--blue);
-    }
+    header h1 span { color: var(--blue); }
+    
     .status-badge {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -82,14 +81,8 @@
       align-items: center;
       gap: 6px;
     }
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      background: #10b981;
-      border-radius: 50%;
-    }
+    .status-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; }
 
-    /* Lista de mensajes */
     .messages-list {
       flex: 1;
       overflow-y: auto;
@@ -99,35 +92,14 @@
       gap: 20px;
     }
 
-    /* Burbujas base */
-    .msg-row {
-      display: flex;
-      width: 100%;
-      animation: fadeIn 0.2s ease-out forwards;
-    }
+    .msg-row { display: flex; width: 100%; animation: fadeIn 0.2s ease-out forwards; }
     .msg-row.user { justify-content: flex-end; }
     .msg-row.bot { justify-content: flex-start; }
 
-    .bubble {
-      max-width: 85%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      line-height: 1.5;
-    }
-    .msg-row.user .bubble {
-      background: var(--surface2);
-      color: var(--text);
-      border: 1px solid var(--border-hover);
-      border-bottom-right-radius: 2px;
-    }
-    .msg-row.bot .bubble {
-      background: transparent;
-      color: var(--text);
-      border-bottom-left-radius: 2px;
-    }
+    .bubble { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; }
+    .msg-row.user .bubble { background: var(--surface2); border: 1px solid var(--border-hover); border-bottom-right-radius: 2px; }
+    .msg-row.bot .bubble { background: transparent; border-bottom-left-radius: 2px; }
 
-    /* Bloque de texto preformateado (Machete/Guías/Ejemplos) */
     .response-block {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -137,12 +109,9 @@
       font-size: 0.85rem;
       line-height: 1.6;
       white-space: pre-wrap;
-      word-break: break-word;
       color: var(--text-mid);
-      max-width: 100%;
     }
 
-    /* Diseño estructurado del Evaluador de Prácticas */
     .eval-card {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -151,154 +120,36 @@
       margin-top: 12px;
       width: 100%;
     }
-    .eval-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-    }
-    .eval-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-    .eval-score {
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-weight: bold;
-      font-size: 0.9rem;
-    }
-    .eval-section {
-      margin-bottom: 14px;
-    }
-    .section-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .section-comment {
-      font-size: 0.85rem;
-      color: var(--text-mid);
-      padding-left: 14px;
-      border-left: 2px solid var(--border);
-    }
-    .eval-list {
-      margin-top: 4px;
-      padding-left: 18px;
-      font-size: 0.85rem;
-      color: var(--text-mid);
-    }
-    .eval-list li {
-      margin-bottom: 4px;
-    }
-
-    /* CHIPS / BOTONES DE CONTROL */
-    .chips-container {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-top: 10px;
-    }
-    .chip {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .chip:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-1px);
-    }
+    .eval-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; }
+    .eval-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
+    .eval-score { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
     
-    /* Variantes por Modo */
+    .eval-section { margin-bottom: 14px; }
+    .section-label { font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+    .section-comment { font-size: 0.85rem; color: var(--text-mid); padding-left: 14px; border-left: 2px solid var(--border); }
+    .eval-list { margin-top: 4px; padding-left: 18px; font-size: 0.85rem; color: var(--text-mid); }
+
+    .chips-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .chip {
+      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;
+    }
+    .chip:hover { border-color: var(--border-hover); transform: translateY(-1px); }
     .chip.guia-mode:hover { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
     .chip.ejemplo-mode:hover { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal); }
     .chip.practica-mode:hover { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple); }
+    .chip.diagnostico-mode:hover { background: var(--orange-bg); color: var(--orange-text); border-color: var(--orange); }
 
-    /* Input Area */
-    .input-container {
-      padding: 16px 24px 24px;
-      border-top: 1px solid var(--border);
-      background: var(--surface);
-    }
-    .input-wrapper {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      padding: 4px 6px 4px 16px;
-      transition: border-color 0.2s ease;
-    }
-    .input-wrapper:focus-within {
-      border-color: var(--border-hover);
-    }
-    .input-wrapper input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.9rem;
-      padding: 8px 0;
-    }
-    .input-wrapper input::placeholder {
-      color: var(--text-muted);
-    }
-    .input-wrapper input:disabled {
-      cursor: not-allowed;
-    }
-    .send-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-    }
-    .send-btn.active {
-      color: var(--blue);
-      background: var(--blue-bg);
-    }
-    .send-btn:disabled {
-      cursor: not-allowed;
-      opacity: 0.4;
-    }
+    .input-container { padding: 16px 24px 24px; border-top: 1px solid var(--border); background: var(--surface); }
+    .input-wrapper { background: var(--surface2); border: 1px solid var(--border); border-radius: 24px; display: flex; align-items: center; padding: 4px 6px 4px 16px; }
+    .input-wrapper input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 0.9rem; padding: 8px 0; }
+    .input-wrapper input:disabled { cursor: not-allowed; }
+    
+    .send-btn { background: transparent; border: none; color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .send-btn.active { color: var(--blue); background: var(--blue-bg); }
 
-    /* Animaciones y utilidades */
-    .typing-indicator {
-      display: flex;
-      gap: 4px;
-      padding: 4px 8px;
-      align-items: center;
-    }
-    .typing-dot {
-      width: 4px;
-      height: 4px;
-      background: var(--text-muted);
-      border-radius: 50%;
-      animation: bounce 1.4s infinite ease-in-out both;
-    }
+    .typing-indicator { display: flex; gap: 4px; padding: 4px 8px; align-items: center; }
+    .typing-dot { width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
     .typing-dot:nth-child(1) { animation-delay: -0.32s; }
     .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 
@@ -311,17 +162,14 @@
   <div class="chat-container">
     <header>
       <h1>Optim<span>Bot</span></h1>
-      <div class="status-badge">
-        <div class="status-dot"></div>
-        <span>IO API v1.0 Activa</span>
-      </div>
+      <div class="status-badge"><div class="status-dot"></div><span>Backend Descentralizado Conectado</span></div>
     </header>
 
     <main class="messages-list" id="messages"></main>
 
     <div class="input-container">
       <div class="input-wrapper">
-        <input type="text" id="chat-input" placeholder="Escribí tu resolución aquí..." disabled />
+        <input type="text" id="chat-input" placeholder="Seleccioná un modo para comenzar..." disabled />
         <button class="send-btn" id="send-button" disabled>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
@@ -335,11 +183,11 @@
     const inp = document.getElementById('chat-input');
     const sendBtn = document.getElementById('send-button');
 
-    // Modos integrados que eliminan la redundancia entre los dos archivos antiguos
     const MODOS = [
-      { key: 'guia', label: '📖 Guía Teórica', desc: 'Preguntas base para modelar.', cls: 'guia-mode' },
-      { key: 'ejemplo', label: '💡 Ver Ejemplo', desc: 'Problemas resueltos paso a paso.', cls: 'ejemplo-mode' },
-      { key: 'practica', label: '🧠 Práctica RAG', desc: 'Resolver un escenario con corrección de IA.', cls: 'practica-mode' }
+      { key: 'guia', label: '📖 Guía Teórica', cls: 'guia-mode' },
+      { key: 'ejemplo', label: '💡 Ver Ejemplo', cls: 'ejemplo-mode' },
+      { key: 'practica', label: '🧠 Práctica RAG', cls: 'practica-mode' },
+      { key: 'diagnostico', label: '🎯 Modo Diagnóstico (Server)', cls: 'diagnostico-mode' }
     ];
 
     const TIPOS = [
@@ -350,14 +198,12 @@
       { key: 'mezcla', label: 'Mezcla', icon: '🧪' }
     ];
 
-    // Variables de control de estado interno
-    let modoActual = null;     // 'guia' | 'ejemplo' | 'practica'
-    let currentTipo = null;    // 'transporte' | 'asignacion' | etc.
-    let currentEscenario = null; // Guardará el objeto de escenario devuelto por el RAG
-    let state = 'modo';        // 'modo' | 'tipo' | 'resolucion'
+    let modoActual = null;
+    let currentTipo = null;
+    let datosEscenarioActivo = null; 
+    let state = 'modo';
     let waiting = false;
 
-    // --- Helpers DOM ---
     function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
 
     function addBotMsg() {
@@ -410,264 +256,221 @@
       return container;
     }
 
-    // --- Flujos de Conversación ---
     async function init() {
-      modoActual = null;
-      currentTipo = null;
-      currentEscenario = null;
-      state = 'modo';
-      waiting = false;
-      
-      inp.disabled = true;
-      inp.placeholder = 'Seleccioná una opción arriba...';
+      modoActual = null; currentTipo = null; datosEscenarioActivo = null;
+      state = 'modo'; waiting = false;
+      inp.disabled = true; inp.placeholder = 'Seleccioná un modo de operación...';
       sendBtn.classList.remove('active');
 
-      const b = await botSay("¡Hola! Soy <strong>OptimBot</strong>, tu asistente de Investigación Operativa. ¿Qué te gustaría hacer hoy?");
+      const b = await botSay("¡Hola! Seleccioná qué módulo educativo querés ejecutar:");
       b.appendChild(makeChips(MODOS, item => {
         addUserMsg(item.label);
         modoActual = item.key;
-        state = 'tipo';
-        mostrarTipos();
-      }));
-    }
-
-    async function mostrarTipos() {
-      let msgText = `Perfecto. ¿De qué familia de problemas querés ver la <strong>guía teórica</strong>?`;
-      if (modoActual === 'ejemplo') msgText = `Entendido. ¿De qué tipo de problema querés revisar un <strong>ejemplo resuelto</strong>?`;
-      if (modoActual === 'practica') msgText = `¡Excelente elección! Vamos a practicar con IA. Seleccioná el modelo de problema a resolver:`;
-
-      const b = await botSay(msgText);
-      b.appendChild(makeChips(TIPOS.map(t => ({
-        ...t,
-        label: `${t.icon} ${t.label}`,
-        cls: modoActual === 'guia' ? 'guia-mode' : modoActual === 'ejemplo' ? 'ejemplo-mode' : 'practica-mode'
-      })), async item => {
-        addUserMsg(item.label);
-        currentTipo = item.key;
-        
-        if (modoActual === 'practica') {
-          await levantarEscenarioRAG();
+        if (modoActual === 'diagnostico') {
+          state = 'respuesta_teorica';
+          solicitarPreguntaDiagnostico();
         } else {
-          await mostrarContenidoEstatico();
+          state = 'tipo';
+          mostrarTipos();
         }
       }));
     }
 
-    // Flujo para Guías y Ejemplos (Texto Plano)
-    async function mostrarContenidoEstatico() {
+    async function mostrarTipos() {
+      let txt = `Elegí la categoría del modelo:`;
+      const b = await botSay(txt);
+      b.appendChild(makeChips(TIPOS.map(t => ({ ...t, label: `${t.icon} ${t.label}`, cls: 'guia-mode' })), async item => {
+        addUserMsg(item.label);
+        currentTipo = item.key;
+        if (modoActual === 'practica') {
+          levantarEscenarioRAG();
+        } else {
+          obtenerContenidoEstatico();
+        }
+      }));
+    }
+
+    async function obtenerContenidoEstatico() {
       const url = `${BASE}/api/${modoActual}/${currentTipo}`;
       const t = makeTyping();
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
         t.remove();
 
         const el = addBotMsg();
         const b = document.createElement('div');
         b.className = 'bubble';
-        b.innerHTML = `Acá tenés el material solicitado para <strong>${currentTipo}</strong>:`;
+        b.innerHTML = `Material recuperado para <strong>${currentTipo}</strong>:`;
         
         const rb = document.createElement('div');
         rb.className = 'response-block';
         rb.textContent = text;
-        
         b.appendChild(rb);
         el.appendChild(b);
 
-        // Ofrecer reiniciar flujo de forma elegante
-        ofrecerBotonVolver(b);
-      } catch (err) {
+        ofrecerVolver(b);
+      } catch (e) {
         t.remove();
-        await botSay(`<span style="color:var(--red-t)">⚠️ Error de conexión: No se pudo obtener la información de ${url}. Comprobá que el servidor esté encendido.</span>`);
-        ofrecerBotonVolver(msgs);
+        await botSay("⚠️ Error de conexión con el backend.");
+        ofrecerVolver(msgs);
       }
     }
 
-    // Flujo Inteligente de Práctica (RAG)
     async function levantarEscenarioRAG() {
       const url = `${BASE}/api/ejercicio/escenario/${currentTipo}`;
       const t = makeTyping();
       try {
         const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        currentEscenario = await res.json();
+        datosEscenarioActivo = await res.json();
         t.remove();
 
         const el = addBotMsg();
         const b = document.createElement('div');
         b.className = 'bubble';
-        b.innerHTML = `Muy bien. He recuperado un escenario para vos.<br><br><strong>Problema: ${currentEscenario.titulo}</strong><br><em>${currentEscenario.descripcion}</em>`;
+        b.innerHTML = `<strong>Escenario Práctico Asignado:</strong><br>🚨 <strong>${datosEscenarioActivo.titulo}</strong><br><em>${datosEscenarioActivo.descripcion}</em>`;
         
         const rb = document.createElement('div');
         rb.className = 'response-block';
-        rb.textContent = currentEscenario.datos;
-        
+        rb.textContent = datosEscenarioActivo.datos;
         b.appendChild(rb);
         el.appendChild(b);
 
-        await botSay("Leé atentamente los datos de arriba. Ahora redactá tus <strong>Variables de decisión, Función Objetivo y Restricciones</strong> en la caja de texto inferior y envíamelas.");
-        
+        await botSay("Ingresá tus variables, función objetivo y restricciones:");
         state = 'resolucion';
         inp.disabled = false;
-        inp.placeholder = 'Escribí detalladamente tu resolución...';
+        inp.placeholder = 'X1 = ..., Max Z = ..., S.A: ...';
         inp.focus();
-      } catch (err) {
+      } catch (e) {
         t.remove();
-        await botSay(`<span style="color:var(--red-t)">⚠️ Error: No se pudo recuperar ningún escenario desde ${url}.</span>`);
-        ofrecerBotonVolver(msgs);
+        await botSay("⚠️ Error al adquirir el ejercicio.");
+        ofrecerVolver(msgs);
       }
     }
 
-    async function enviarResolucionAlEvaluador() {
-      const text = inp.value.trim();
-      if (!text || waiting) return;
-
-      addUserMsg(text);
-      inp.value = '';
-      inp.disabled = true;
-      sendBtn.disabled = true;
-      sendBtn.classList.remove('active');
-      waiting = true;
-
+    // --- NUEVO CONSUMO DEL BACKEND DE DIAGNÓSTICO ---
+    async function solicitarPreguntaDiagnostico() {
+      const url = `${BASE}/api/ejercicio/diagnostico`;
       const t = makeTyping();
-
       try {
-        const res = await fetch(`${BASE}/api/ejercicio/evaluar`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            tipo: currentTipo,
-            escenario: currentEscenario,
-            resolucion: text
-          })
-        });
-
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const evalResult = await res.json();
+        const res = await fetch(url);
+        datosEscenarioActivo = await res.json();
         t.remove();
 
-        // Determinar color de la tarjeta según puntaje
-        let scoreColor = 'var(--green-t)';
-        let scoreBg = 'var(--green-bg)';
-        if (evalResult.puntaje < 50) { scoreColor = 'var(--red-t)'; scoreBg = 'var(--red-bg)'; }
-        else if (evalResult.puntaje < 75) { scoreColor = 'var(--amber-t)'; scoreBg = 'var(--amber-bg)'; }
+        const el = addBotMsg();
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        b.innerHTML = `<h3>Examen Diagnóstico (RAG Inverso - data.md)</h3><br><strong>${datosEscenarioActivo.titulo}</strong>`;
+        
+        const rb = document.createElement('div');
+        rb.className = 'response-block';
+        rb.textContent = datosEscenarioActivo.datos;
+        b.appendChild(rb);
+        el.appendChild(b);
 
-        // Renderizado semántico y elegante de la evaluación del LLM
+        await botSay("Escribí tu justificación conceptual de acuerdo con los apuntes teóricos:");
+        state = 'respuesta_teorica';
+        inp.disabled = false;
+        inp.placeholder = 'Redactá los fundamentos aquí...';
+        inp.focus();
+      } catch (e) {
+        t.remove();
+        await botSay("⚠️ No se pudo obtener la pregunta teórica desde el servidor.");
+        ofrecerVolver(msgs);
+      }
+    }
+
+    async function procesarEnvio() {
+      const val = inp.value.trim();
+      if (!val || waiting) return;
+
+      addUserMsg(val);
+      inp.value = ''; inp.disabled = true;
+      waiting = true;
+      const t = makeTyping();
+
+      let url = `${BASE}/api/ejercicio/evaluar`;
+      let payload = { tipo: currentTipo, escenario: datosEscenarioActivo, resolucion: val };
+
+      // Si estamos en modo diagnóstico cambiamos el endpoint y la estructura esperada
+      if (modoActual === 'diagnostico') {
+        url = `${BASE}/api/ejercicio/evaluar-teoria`;
+        payload = { pregunta: datosEscenarioActivo.datos, respuestaEstudiante: val };
+      }
+
+      try {
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const ev = await res.json();
+        t.remove();
+
+        let clr = 'var(--green-t)'; let bg = 'var(--green-bg)';
+        if (ev.puntaje < 50) { clr = 'var(--red-t)'; bg = 'var(--red-bg)'; }
+        else if (ev.puntaje < 75) { clr = 'var(--amber-t)'; bg = 'var(--amber-bg)'; }
+
         const el = addBotMsg();
         const card = document.createElement('div');
         card.className = 'eval-card';
         card.innerHTML = `
           <div class="eval-header">
-            <div class="eval-title">Evaluación del Profesor Virtual</div>
-            <div class="eval-score" style="background:${scoreBg}; color:${scoreColor}">${evalResult.puntaje}/100 (${evalResult.nivel})</div>
+            <div class="eval-title">Devolución Docente Inteligente</div>
+            <div class="eval-score" style="background:${bg}; color:${clr}">${ev.puntaje}/100 [${ev.nivel}]</div>
           </div>
-          
           <div class="eval-section">
-            <div class="section-label" style="color: ${evalResult.variables_decision.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
-              ${evalResult.variables_decision.correcto ? '✓' : '✗'} Variables de Decisión
-            </div>
-            <div class="section-comment">${evalResult.variables_decision.comentario}</div>
+            <div class="section-label" style="color:${clr}">📝 Análisis General:</div>
+            <div class="section-comment">${ev.resumen}</div>
           </div>
-
           <div class="eval-section">
-            <div class="section-label" style="color: ${evalResult.funcion_objetivo.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
-              ${evalResult.funcion_objetivo.correcto ? '✓' : '✗'} Función Objetivo
-            </div>
-            <div class="section-comment">${evalResult.funcion_objetivo.comentario}</div>
+            <div class="section-label" style="color:var(--blue-text)">✓ Puntos Logrados:</div>
+            <ul class="eval-list">${ev.que_estuvo_bien.map(i=>`<li>${i}</li>`).join('')}</ul>
           </div>
-
-          <div class="eval-section">
-            <div class="section-label" style="color: ${evalResult.restricciones.correcto ? 'var(--green-t)' : 'var(--red-t)'}">
-              ${evalResult.restricciones.correcto ? '✓' : '✗'} Restricciones Matemáticas
-            </div>
-            <div class="section-comment">${evalResult.restricciones.comentario}</div>
-          </div>
-
-          <div class="eval-section" style="margin-top: 16px;">
-            <div class="section-label" style="color:var(--blue-text)">🎯 Puntos Fuertes:</div>
-            <ul class="eval-list">${evalResult.que_estuvo_bien.map(i => `<li>${i}</li>`).join('') || '<li>Ninguno destacado.</li>'}</ul>
-          </div>
-
           <div class="eval-section">
             <div class="section-label" style="color:var(--amber-t)">⚠️ Oportunidades de Mejora:</div>
-            <ul class="eval-list">${evalResult.que_mejorar.map(i => `<li>${i}</li>`).join('') || '<li>¡Nada que mejorar! Excelente.</li>'}</ul>
-          </div>
-
-          <div class="eval-section" style="border-top:1px solid var(--border); padding-top:12px; margin-bottom:0;">
-            <div class="section-label" style="color:var(--text-muted)">Resumen General:</div>
-            <p style="font-size:0.85rem; color:var(--text-mid); line-height:1.4;">${evalResult.resumen}</p>
+            <ul class="eval-list">${ev.que_mejorar.map(i=>`<li>${i}</li>`).join('')}</ul>
           </div>
         `;
         el.appendChild(card);
         scrollDown();
 
-        // Controles de reintento o salida
-        const b = await botSay("¿Qué te gustaría hacer ahora?");
+        const b = await botSay("¿Qué deseas hacer ahora?");
         b.appendChild(makeChips([
-          { key: 'reintentar', label: '↩️ Intentar de nuevo este ejercicio', cls: 'practica-mode' },
-          { key: 'nuevo', label: '✨ Pedir otro escenario', cls: 'teal-mode' },
-          { key: 'menu', label: '🏠 Ir al Menú Principal', cls: '' }
+          { key: 'siguiente', label: modoActual === 'diagnostico' ? '🎯 Siguiente Pregunta' : '✨ Nuevo Escenario', cls: 'diagnostico-mode' },
+          { key: 'menu', label: '🏠 Menú Principal', cls: '' }
         ], item => {
-          if (item.key === 'reintentar') {
-            addUserMsg("Quiero reintentar este ejercicio.");
-            waiting = false;
-            state = 'resolucion';
-            inp.disabled = false;
-            inp.placeholder = 'Corregí tu resolución anterior...';
-            inp.focus();
-          } else if (item.key === 'nuevo') {
-            addUserMsg("Quiero otro escenario de este tipo.");
-            levantarEscenarioRAG();
+          waiting = false;
+          if (item.key === 'siguiente') {
+            if (modoActual === 'diagnostico') solicitarPreguntaDiagnostico();
+            else levantarEscenarioRAG();
           } else {
-            addUserMsg("Volver al inicio.");
             init();
           }
         }));
 
-      } catch (err) {
+      } catch (e) {
         t.remove();
-        await botSay(`<span style="color:var(--red-t)">❌ Error al evaluar: Asegurate de tener Ollama levantado en local con el modelo Mistral activo.</span>`);
-        waiting = false;
-        state = 'resolucion';
-        inp.disabled = false;
-        inp.placeholder = 'Reintentar enviar resolución...';
+        await botSay("❌ Error crítico al comunicar la resolución con el evaluador LLM.");
+        waiting = false; inp.disabled = false;
       }
     }
 
-    function ofrecerBotonVolver(parentEl) {
-      parentEl.appendChild(makeChips([{ key: 'inicio', label: '🏠 Volver al Inicio', cls: '' }], () => {
-        addUserMsg("Volver al Inicio");
-        init();
-      }));
+    function ofrecerVolver(p) {
+      p.appendChild(makeChips([{ key: 'ini', label: '🏠 Volver al Menú', cls: '' }], () => { init(); }));
       scrollDown();
     }
 
-    // --- Controladores de Eventos del Input ---
     inp.addEventListener('input', () => {
-      if (inp.value.trim().length > 0) {
-        sendBtn.disabled = false;
-        sendBtn.classList.add('active');
-      } else {
-        sendBtn.disabled = true;
-        sendBtn.classList.remove('active');
-      }
+      sendBtn.disabled = inp.value.trim().length === 0;
+      if (!sendBtn.disabled) sendBtn.classList.add('active');
+      else sendBtn.classList.remove('active');
     });
 
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey && state === 'resolucion' && !waiting) {
-        e.preventDefault();
-        enviarResolucionAlEvaluador();
-      }
-    });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !waiting) { e.preventDefault(); procesarEnvio(); } });
+    sendBtn.addEventListener('click', () => { if (!waiting) procesarEnvio(); });
 
-    sendBtn.addEventListener('click', () => {
-      if (state === 'resolucion' && !waiting) {
-        enviarResolucionAlEvaluador();
-      }
-    });
-
-    // Arrancar la app
     init();
   </script>
 </body>
