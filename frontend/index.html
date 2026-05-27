@@ -3,45 +3,38 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OptimBot - Panel Educativo Completo</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <title>Chatbot Grupo 11</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0e0f11;
-      --surface: #16181c;
-      --surface2: #1e2026;
-      --border: rgba(255,255,255,0.07);
+      --bg: #111113;
+      --surface: #18181b;
+      --surface2: #222226;
+      --border: rgba(255,255,255,0.08);
       --border-hover: rgba(255,255,255,0.18);
-      --text: #f0f0ec;
-      --text-muted: #6e7280;
-      --text-mid: #a0a5b2;
-      --blue: #378ADD;
-      --blue-bg: rgba(55,138,221,0.1);
-      --blue-text: #85B7EB;
-      --teal: #1D9E75;
-      --teal-bg: rgba(29,158,117,0.1);
-      --teal-text: #5DCAA5;
-      --purple: #8B5CF6;
-      --purple-bg: rgba(139,92,246,0.1);
-      --purple-text: #A78BFA;
-      --orange: #EA580C;
-      --orange-bg: rgba(234,88,12,0.1);
-      --orange-text: #F97316;
-      
-      --green-bg: rgba(29,158,117,0.1);
-      --green-t: #5DCAA5;
-      --red-bg: rgba(220,38,38,0.1);
-      --red-t: #F87171;
-      --amber-bg: rgba(217,119,6,0.1);
-      --amber-t: #FBBF24;
+      --text: #e4e4e7;
+      --text-mid: #a1a1aa;
+      --text-muted: #52525b;
+      --accent: #e4e4e7;
+      --blue: #3b82f6;
+      --blue-bg: rgba(59,130,246,0.12);
+      --blue-text: #93c5fd;
+      --green-bg: rgba(34,197,94,0.1);
+      --green-t: #4ade80;
+      --red-bg: rgba(239,68,68,0.1);
+      --red-t: #f87171;
+      --amber-bg: rgba(245,158,11,0.1);
+      --amber-t: #fbbf24;
+      --sans: 'Inter', sans-serif;
+      --mono: 'JetBrains Mono', monospace;
     }
 
     body {
-      background-color: var(--bg);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'DM+Mono', monospace;
+      font-family: var(--sans);
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -51,7 +44,7 @@
 
     .chat-container {
       width: 100%;
-      max-width: 850px;
+      max-width: 780px;
       height: 100vh;
       background: var(--surface);
       display: flex;
@@ -61,53 +54,84 @@
     }
 
     header {
-      padding: 20px 24px;
+      padding: 18px 24px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      background: var(--surface);
     }
+
     header h1 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 700;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
     }
-    header h1 span { color: var(--blue); }
-    
+
     .status-badge {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
+      font-family: var(--mono);
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .status-dot { width: 6px; height: 6px; background: #10b981; border-radius: 50%; }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
 
     .messages-list {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
+      padding: 28px 24px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
-    .msg-row { display: flex; width: 100%; animation: fadeIn 0.2s ease-out forwards; }
-    .msg-row.user { justify-content: flex-end; }
-    .msg-row.bot { justify-content: flex-start; }
+    .messages-list::-webkit-scrollbar { width: 4px; }
+    .messages-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .bubble { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5; }
-    .msg-row.user .bubble { background: var(--surface2); border: 1px solid var(--border-hover); border-bottom-right-radius: 2px; }
-    .msg-row.bot .bubble { background: transparent; border-bottom-left-radius: 2px; }
+    .msg-row { display: flex; width: 100%; animation: fadeIn 0.15s ease-out forwards; }
+    .msg-row.user { justify-content: flex-end; }
+    .msg-row.bot  { justify-content: flex-start; }
+
+    .bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      line-height: 1.55;
+    }
+
+    .msg-row.user .bubble {
+      background: var(--text);
+      color: #ffffff;
+      border-bottom-right-radius: 3px;
+    }
+
+    .msg-row.bot .bubble {
+      background: transparent;
+      color: var(--text);
+      border-bottom-left-radius: 3px;
+      padding-left: 0;
+    }
 
     .response-block {
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      margin-top: 10px;
-      font-size: 0.85rem;
-      line-height: 1.6;
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      line-height: 1.7;
       white-space: pre-wrap;
       color: var(--text-mid);
     }
@@ -115,363 +139,493 @@
     .eval-card {
       background: var(--surface2);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      margin-top: 12px;
+      border-radius: 8px;
+      padding: 18px;
+      margin-top: 10px;
       width: 100%;
     }
-    .eval-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 16px; }
-    .eval-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
-    .eval-score { padding: 6px 12px; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
-    
-    .eval-section { margin-bottom: 14px; }
-    .section-label { font-size: 0.75rem; text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-    .section-comment { font-size: 0.85rem; color: var(--text-mid); padding-left: 14px; border-left: 2px solid var(--border); }
-    .eval-list { margin-top: 4px; padding-left: 18px; font-size: 0.85rem; color: var(--text-mid); }
 
-    .chips-container { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-    .chip {
-      background: var(--surface2); border: 1px solid var(--border); color: var(--text);
-      padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;
+    .eval-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 14px;
     }
-    .chip:hover { border-color: var(--border-hover); transform: translateY(-1px); }
-    .chip.guia-mode:hover { background: var(--blue-bg); color: var(--blue-text); border-color: var(--blue); }
-    .chip.ejemplo-mode:hover { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal); }
-    .chip.practica-mode:hover { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple); }
-    .chip.diagnostico-mode:hover { background: var(--orange-bg); color: var(--orange-text); border-color: var(--orange); }
 
-    .input-container { padding: 16px 24px 24px; border-top: 1px solid var(--border); background: var(--surface); }
-    .input-wrapper { background: var(--surface2); border: 1px solid var(--border); border-radius: 24px; display: flex; align-items: center; padding: 4px 6px 4px 16px; }
-    .input-wrapper input { flex: 1; background: transparent; border: none; outline: none; color: var(--text); font-size: 0.9rem; padding: 8px 0; }
+    .eval-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .eval-score {
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-family: var(--mono);
+    }
+
+    .eval-section { margin-bottom: 12px; }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 5px;
+      color: var(--text-muted);
+    }
+
+    .section-comment {
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      padding-left: 12px;
+      border-left: 2px solid var(--border);
+      line-height: 1.55;
+    }
+
+    .eval-list {
+      margin-top: 4px;
+      padding-left: 16px;
+      font-size: 0.84rem;
+      color: var(--text-mid);
+      line-height: 1.7;
+    }
+
+    .chips-container {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-mid);
+      padding: 7px 13px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: var(--sans);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .chip:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: var(--surface2);
+    }
+
+    .chip:disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .input-container {
+      padding: 14px 24px 20px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .input-wrapper {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 2px 4px 2px 14px;
+      transition: border-color 0.12s;
+    }
+
+    .input-wrapper:focus-within {
+      border-color: var(--border-hover);
+    }
+
+    .input-wrapper input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 0.875rem;
+      padding: 9px 0;
+    }
+
+    .input-wrapper input::placeholder { color: var(--text-muted); }
     .input-wrapper input:disabled { cursor: not-allowed; }
-    
-    .send-btn { background: transparent; border: none; color: var(--text-muted); width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .send-btn.active { color: var(--blue); background: var(--blue-bg); }
 
-    .typing-indicator { display: flex; gap: 4px; padding: 4px 8px; align-items: center; }
-    .typing-dot { width: 4px; height: 4px; background: var(--text-muted); border-radius: 50%; animation: bounce 1.4s infinite ease-in-out both; }
+    .send-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+    }
+
+    .send-btn.active {
+      color: var(--blue);
+      background: var(--blue-bg);
+    }
+
+    .typing-indicator {
+      display: flex;
+      gap: 4px;
+      padding: 4px 2px;
+      align-items: center;
+    }
+
+    .typing-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
     .typing-dot:nth-child(1) { animation-delay: -0.32s; }
     .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+    @keyframes fadeIn  { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes bounce  { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
   </style>
 </head>
 <body>
 
-  <div class="chat-container">
-    <header>
-      <h1>Optim<span>Bot</span></h1>
-      <div class="status-badge"><div class="status-dot"></div><span>Backend Descentralizado Conectado</span></div>
-    </header>
+<div class="chat-container">
+  <header>
+    <h1>Chatbot Grupo 11</h1>
+    <div class="status-badge"><div class="status-dot"></div><span>localhost:3000</span></div>
+  </header>
 
-    <main class="messages-list" id="messages"></main>
+  <main class="messages-list" id="messages"></main>
 
-    <div class="input-container">
-      <div class="input-wrapper">
-        <input type="text" id="chat-input" placeholder="Seleccioná un modo para comenzar..." disabled />
-        <button class="send-btn" id="send-button" disabled>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-        </button>
-      </div>
+  <div class="input-container">
+    <div class="input-wrapper">
+      <input type="text" id="chat-input" placeholder="Selecciona un modo para comenzar..." disabled />
+      <button class="send-btn" id="send-button" disabled>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
     </div>
   </div>
+</div>
 
-  <script>
-    const BASE = "http://localhost:3000";
-    const msgs = document.getElementById('messages');
-    const inp = document.getElementById('chat-input');
-    const sendBtn = document.getElementById('send-button');
+<script>
+  const BASE = "http://localhost:3000";
+  const msgs = document.getElementById('messages');
+  const inp  = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('send-button');
 
-    const MODOS = [
-      { key: 'guia', label: '📖 Guía Teórica', cls: 'guia-mode' },
-      { key: 'ejemplo', label: '💡 Ver Ejemplo', cls: 'ejemplo-mode' },
-      { key: 'practica', label: '🧠 Práctica RAG', cls: 'practica-mode' },
-      { key: 'diagnostico', label: '🎯 Modo Diagnóstico (Server)', cls: 'diagnostico-mode' }
-    ];
+  const MODOS = [
+    { key: 'guia',        label: 'Guia teorica',   cls: '' },
+    { key: 'ejemplo',     label: 'Ver ejemplo',    cls: '' },
+    { key: 'practica',    label: 'Practica',       cls: '' },
+    { key: 'diagnostico', label: 'Diagnostico',    cls: '' }
+  ];
 
-    const TIPOS = [
-      { key: 'transporte', label: 'Transporte', icon: '🚚' },
-      { key: 'asignacion', label: 'Asignación', icon: '👥' },
-      { key: 'financiero', label: 'Financiero', icon: '📈' },
-      { key: 'produccion', label: 'Producción', icon: '🏭' },
-      { key: 'mezcla', label: 'Mezcla', icon: '🧪' }
-    ];
+  const TIPOS = [
+    { key: 'transporte', label: 'Transporte' },
+    { key: 'asignacion', label: 'Asignacion' },
+    { key: 'financiero', label: 'Financiero' },
+    { key: 'produccion', label: 'Produccion' },
+    { key: 'mezcla',     label: 'Mezcla'     }
+  ];
 
-    let modoActual = null;
-    let currentTipo = null;
-    let datosEscenarioActivo = null; 
-    let state = 'modo';
-    let waiting = false;
+  let modoActual          = null;
+  let currentTipo         = null;
+  let datosEscenarioActivo = null;
+  let state   = 'modo';
+  let waiting = false;
 
-    function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
+  function scrollDown() { msgs.scrollTop = msgs.scrollHeight; }
 
-    function addBotMsg() {
-      const row = document.createElement('div');
-      row.className = 'msg-row bot';
-      msgs.appendChild(row);
-      return row;
-    }
+  function addBotMsg() {
+    const row = document.createElement('div');
+    row.className = 'msg-row bot';
+    msgs.appendChild(row);
+    return row;
+  }
 
-    function addUserMsg(text) {
-      const row = document.createElement('div');
-      row.className = 'msg-row user';
-      row.innerHTML = `<div class="bubble">${text}</div>`;
-      msgs.appendChild(row);
-      scrollDown();
-    }
+  function addUserMsg(text) {
+    const row = document.createElement('div');
+    row.className = 'msg-row user';
+    row.innerHTML = `<div class="bubble">${text}</div>`;
+    msgs.appendChild(row);
+    scrollDown();
+  }
 
-    async function botSay(html) {
-      const el = addBotMsg();
-      const b = document.createElement('div');
-      b.className = 'bubble';
-      b.innerHTML = html;
-      el.appendChild(b);
-      scrollDown();
-      return b;
-    }
+  async function botSay(html) {
+    const el = addBotMsg();
+    const b  = document.createElement('div');
+    b.className = 'bubble';
+    b.innerHTML = html;
+    el.appendChild(b);
+    scrollDown();
+    return b;
+  }
 
-    function makeTyping() {
-      const el = addBotMsg();
-      const b = document.createElement('div');
-      b.className = 'bubble';
-      b.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-      el.appendChild(b);
-      return b;
-    }
+  function makeTyping() {
+    const el = addBotMsg();
+    const b  = document.createElement('div');
+    b.className = 'bubble';
+    b.innerHTML = `<div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
+    el.appendChild(b);
+    return b;
+  }
 
-    function makeChips(items, onClick) {
-      const container = document.createElement('div');
-      container.className = 'chips-container';
-      items.forEach(item => {
-        const btn = document.createElement('button');
-        btn.className = `chip ${item.cls || ''}`;
-        btn.innerHTML = item.label;
-        btn.onclick = () => {
-          container.querySelectorAll('button').forEach(b => b.disabled = true);
-          onClick(item);
-        };
-        container.appendChild(btn);
-      });
-      return container;
-    }
-
-    async function init() {
-      modoActual = null; currentTipo = null; datosEscenarioActivo = null;
-      state = 'modo'; waiting = false;
-      inp.disabled = true; inp.placeholder = 'Seleccioná un modo de operación...';
-      sendBtn.classList.remove('active');
-
-      const b = await botSay("¡Hola! Seleccioná qué módulo educativo querés ejecutar:");
-      b.appendChild(makeChips(MODOS, item => {
-        addUserMsg(item.label);
-        modoActual = item.key;
-        if (modoActual === 'diagnostico') {
-          state = 'respuesta_teorica';
-          solicitarPreguntaDiagnostico();
-        } else {
-          state = 'tipo';
-          mostrarTipos();
-        }
-      }));
-    }
-
-    async function mostrarTipos() {
-      let txt = `Elegí la categoría del modelo:`;
-      const b = await botSay(txt);
-      b.appendChild(makeChips(TIPOS.map(t => ({ ...t, label: `${t.icon} ${t.label}`, cls: 'guia-mode' })), async item => {
-        addUserMsg(item.label);
-        currentTipo = item.key;
-        if (modoActual === 'practica') {
-          levantarEscenarioRAG();
-        } else {
-          obtenerContenidoEstatico();
-        }
-      }));
-    }
-
-    async function obtenerContenidoEstatico() {
-      const url = `${BASE}/api/${modoActual}/${currentTipo}`;
-      const t = makeTyping();
-      try {
-        const res = await fetch(url);
-        const text = await res.text();
-        t.remove();
-
-        const el = addBotMsg();
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        b.innerHTML = `Material recuperado para <strong>${currentTipo}</strong>:`;
-        
-        const rb = document.createElement('div');
-        rb.className = 'response-block';
-        rb.textContent = text;
-        b.appendChild(rb);
-        el.appendChild(b);
-
-        ofrecerVolver(b);
-      } catch (e) {
-        t.remove();
-        await botSay("⚠️ Error de conexión con el backend.");
-        ofrecerVolver(msgs);
-      }
-    }
-
-    async function levantarEscenarioRAG() {
-      const url = `${BASE}/api/ejercicio/escenario/${currentTipo}`;
-      const t = makeTyping();
-      try {
-        const res = await fetch(url);
-        datosEscenarioActivo = await res.json();
-        t.remove();
-
-        const el = addBotMsg();
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        b.innerHTML = `<strong>Escenario Práctico Asignado:</strong><br>🚨 <strong>${datosEscenarioActivo.titulo}</strong><br><em>${datosEscenarioActivo.descripcion}</em>`;
-        
-        const rb = document.createElement('div');
-        rb.className = 'response-block';
-        rb.textContent = datosEscenarioActivo.datos;
-        b.appendChild(rb);
-        el.appendChild(b);
-
-        await botSay("Ingresá tus variables, función objetivo y restricciones:");
-        state = 'resolucion';
-        inp.disabled = false;
-        inp.placeholder = 'X1 = ..., Max Z = ..., S.A: ...';
-        inp.focus();
-      } catch (e) {
-        t.remove();
-        await botSay("⚠️ Error al adquirir el ejercicio.");
-        ofrecerVolver(msgs);
-      }
-    }
-
-    // --- NUEVO CONSUMO DEL BACKEND DE DIAGNÓSTICO ---
-    async function solicitarPreguntaDiagnostico() {
-      const url = `${BASE}/api/ejercicio/diagnostico`;
-      const t = makeTyping();
-      try {
-        const res = await fetch(url);
-        datosEscenarioActivo = await res.json();
-        t.remove();
-
-        const el = addBotMsg();
-        const b = document.createElement('div');
-        b.className = 'bubble';
-        b.innerHTML = `<h3>Examen Diagnóstico (RAG Inverso - data.md)</h3><br><strong>${datosEscenarioActivo.titulo}</strong>`;
-        
-        const rb = document.createElement('div');
-        rb.className = 'response-block';
-        rb.textContent = datosEscenarioActivo.datos;
-        b.appendChild(rb);
-        el.appendChild(b);
-
-        await botSay("Escribí tu justificación conceptual de acuerdo con los apuntes teóricos:");
-        state = 'respuesta_teorica';
-        inp.disabled = false;
-        inp.placeholder = 'Redactá los fundamentos aquí...';
-        inp.focus();
-      } catch (e) {
-        t.remove();
-        await botSay("⚠️ No se pudo obtener la pregunta teórica desde el servidor.");
-        ofrecerVolver(msgs);
-      }
-    }
-
-    async function procesarEnvio() {
-      const val = inp.value.trim();
-      if (!val || waiting) return;
-
-      addUserMsg(val);
-      inp.value = ''; inp.disabled = true;
-      waiting = true;
-      const t = makeTyping();
-
-      let url = `${BASE}/api/ejercicio/evaluar`;
-      let payload = { tipo: currentTipo, escenario: datosEscenarioActivo, resolucion: val };
-
-      // Si estamos en modo diagnóstico cambiamos el endpoint y la estructura esperada
-      if (modoActual === 'diagnostico') {
-        url = `${BASE}/api/ejercicio/evaluar-teoria`;
-        payload = { pregunta: datosEscenarioActivo.datos, respuestaEstudiante: val };
-      }
-
-      try {
-        const res = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const ev = await res.json();
-        t.remove();
-
-        let clr = 'var(--green-t)'; let bg = 'var(--green-bg)';
-        if (ev.puntaje < 50) { clr = 'var(--red-t)'; bg = 'var(--red-bg)'; }
-        else if (ev.puntaje < 75) { clr = 'var(--amber-t)'; bg = 'var(--amber-bg)'; }
-
-        const el = addBotMsg();
-        const card = document.createElement('div');
-        card.className = 'eval-card';
-        card.innerHTML = `
-          <div class="eval-header">
-            <div class="eval-title">Devolución Docente Inteligente</div>
-            <div class="eval-score" style="background:${bg}; color:${clr}">${ev.puntaje}/100 [${ev.nivel}]</div>
-          </div>
-          <div class="eval-section">
-            <div class="section-label" style="color:${clr}">📝 Análisis General:</div>
-            <div class="section-comment">${ev.resumen}</div>
-          </div>
-          <div class="eval-section">
-            <div class="section-label" style="color:var(--blue-text)">✓ Puntos Logrados:</div>
-            <ul class="eval-list">${ev.que_estuvo_bien.map(i=>`<li>${i}</li>`).join('')}</ul>
-          </div>
-          <div class="eval-section">
-            <div class="section-label" style="color:var(--amber-t)">⚠️ Oportunidades de Mejora:</div>
-            <ul class="eval-list">${ev.que_mejorar.map(i=>`<li>${i}</li>`).join('')}</ul>
-          </div>
-        `;
-        el.appendChild(card);
-        scrollDown();
-
-        const b = await botSay("¿Qué deseas hacer ahora?");
-        b.appendChild(makeChips([
-          { key: 'siguiente', label: modoActual === 'diagnostico' ? '🎯 Siguiente Pregunta' : '✨ Nuevo Escenario', cls: 'diagnostico-mode' },
-          { key: 'menu', label: '🏠 Menú Principal', cls: '' }
-        ], item => {
-          waiting = false;
-          if (item.key === 'siguiente') {
-            if (modoActual === 'diagnostico') solicitarPreguntaDiagnostico();
-            else levantarEscenarioRAG();
-          } else {
-            init();
-          }
-        }));
-
-      } catch (e) {
-        t.remove();
-        await botSay("❌ Error crítico al comunicar la resolución con el evaluador LLM.");
-        waiting = false; inp.disabled = false;
-      }
-    }
-
-    function ofrecerVolver(p) {
-      p.appendChild(makeChips([{ key: 'ini', label: '🏠 Volver al Menú', cls: '' }], () => { init(); }));
-      scrollDown();
-    }
-
-    inp.addEventListener('input', () => {
-      sendBtn.disabled = inp.value.trim().length === 0;
-      if (!sendBtn.disabled) sendBtn.classList.add('active');
-      else sendBtn.classList.remove('active');
+  function makeChips(items, onClick) {
+    const container = document.createElement('div');
+    container.className = 'chips-container';
+    items.forEach(item => {
+      const btn = document.createElement('button');
+      btn.className = `chip ${item.cls || ''}`;
+      btn.textContent = item.label;
+      btn.onclick = () => {
+        container.querySelectorAll('button').forEach(b => b.disabled = true);
+        onClick(item);
+      };
+      container.appendChild(btn);
     });
+    return container;
+  }
 
-    inp.addEventListener('keydown', e => { if (e.key === 'Enter' && !waiting) { e.preventDefault(); procesarEnvio(); } });
-    sendBtn.addEventListener('click', () => { if (!waiting) procesarEnvio(); });
+  async function init() {
+    modoActual = null; currentTipo = null; datosEscenarioActivo = null;
+    state = 'modo'; waiting = false;
+    inp.disabled = true;
+    inp.placeholder = 'Selecciona un modo para comenzar...';
+    sendBtn.classList.remove('active');
 
-    init();
-  </script>
+    const b = await botSay('Selecciona el modo de uso:');
+    b.appendChild(makeChips(MODOS, item => {
+      addUserMsg(item.label);
+      modoActual = item.key;
+      if (modoActual === 'diagnostico') {
+        state = 'respuesta_teorica';
+        solicitarPreguntaDiagnostico();
+      } else {
+        state = 'tipo';
+        mostrarTipos();
+      }
+    }));
+  }
+
+  async function mostrarTipos() {
+    const b = await botSay('Selecciona el tipo de problema:');
+    b.appendChild(makeChips(TIPOS, async item => {
+      addUserMsg(item.label);
+      currentTipo = item.key;
+      if (modoActual === 'practica') {
+        levantarEscenarioRAG();
+      } else {
+        obtenerContenidoEstatico();
+      }
+    }));
+  }
+
+  async function obtenerContenidoEstatico() {
+    const url = `${BASE}/api/${modoActual}/${currentTipo}`;
+    const t   = makeTyping();
+    try {
+      const res  = await fetch(url);
+      const text = await res.text();
+      t.remove();
+
+      const el = addBotMsg();
+      const b  = document.createElement('div');
+      b.className = 'bubble';
+      b.innerHTML = `Resultado para <strong>${currentTipo}</strong>:`;
+
+      const rb = document.createElement('div');
+      rb.className = 'response-block';
+      rb.textContent = text;
+      b.appendChild(rb);
+      el.appendChild(b);
+
+      ofrecerVolver(b);
+    } catch (e) {
+      t.remove();
+      await botSay('Error de conexion con el backend.');
+      ofrecerVolver(msgs);
+    }
+  }
+
+  async function levantarEscenarioRAG() {
+    const url = `${BASE}/api/ejercicio/escenario/${currentTipo}`;
+    const t   = makeTyping();
+    try {
+      const res = await fetch(url);
+      datosEscenarioActivo = await res.json();
+      t.remove();
+
+      const el = addBotMsg();
+      const b  = document.createElement('div');
+      b.className = 'bubble';
+      b.innerHTML = `<strong>${datosEscenarioActivo.titulo}</strong><br><span style="color:var(--text-mid);font-size:0.84rem">${datosEscenarioActivo.descripcion}</span>`;
+
+      const rb = document.createElement('div');
+      rb.className = 'response-block';
+      rb.textContent = datosEscenarioActivo.datos;
+      b.appendChild(rb);
+      el.appendChild(b);
+
+      await botSay('Ingresa las variables de decision, funcion objetivo y restricciones:');
+      state = 'resolucion';
+      inp.disabled = false;
+      inp.placeholder = 'Escribe tu resolucion aqui...';
+      inp.focus();
+    } catch (e) {
+      t.remove();
+      await botSay('Error al obtener el escenario.');
+      ofrecerVolver(msgs);
+    }
+  }
+
+  async function solicitarPreguntaDiagnostico() {
+    const url = `${BASE}/api/ejercicio/diagnostico`;
+    const t   = makeTyping();
+    try {
+      const res = await fetch(url);
+      datosEscenarioActivo = await res.json();
+      t.remove();
+
+      const el = addBotMsg();
+      const b  = document.createElement('div');
+      b.className = 'bubble';
+      b.innerHTML = `<strong>${datosEscenarioActivo.titulo}</strong>`;
+
+      const rb = document.createElement('div');
+      rb.className = 'response-block';
+      rb.textContent = datosEscenarioActivo.datos;
+      b.appendChild(rb);
+      el.appendChild(b);
+
+      await botSay('Redacta tu respuesta:');
+      state = 'respuesta_teorica';
+      inp.disabled = false;
+      inp.placeholder = 'Escribe tu respuesta aqui...';
+      inp.focus();
+    } catch (e) {
+      t.remove();
+      await botSay('No se pudo obtener la pregunta desde el servidor.');
+      ofrecerVolver(msgs);
+    }
+  }
+
+  async function procesarEnvio() {
+    const val = inp.value.trim();
+    if (!val || waiting) return;
+
+    addUserMsg(val);
+    inp.value = ''; inp.disabled = true;
+    waiting = true;
+    const t = makeTyping();
+
+    let url     = `${BASE}/api/ejercicio/evaluar`;
+    let payload = { tipo: currentTipo, escenario: datosEscenarioActivo, resolucion: val };
+
+    if (modoActual === 'diagnostico') {
+      url     = `${BASE}/api/ejercicio/evaluar-teoria`;
+      payload = { pregunta: datosEscenarioActivo.datos, respuestaEstudiante: val };
+    }
+
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const ev = await res.json();
+      t.remove();
+
+      let clr = 'var(--green-t)'; let bg = 'var(--green-bg)';
+      if (ev.puntaje < 50)      { clr = 'var(--red-t)';   bg = 'var(--red-bg)'; }
+      else if (ev.puntaje < 75) { clr = 'var(--amber-t)'; bg = 'var(--amber-bg)'; }
+
+      const el   = addBotMsg();
+      const card = document.createElement('div');
+      card.className = 'eval-card';
+      card.innerHTML = `
+        <div class="eval-header">
+          <div class="eval-title">Evaluacion</div>
+          <div class="eval-score" style="background:${bg}; color:${clr}">${ev.puntaje}/100 — ${ev.nivel}</div>
+        </div>
+        <div class="eval-section">
+          <div class="section-label">Resumen</div>
+          <div class="section-comment">${ev.resumen}</div>
+        </div>
+        <div class="eval-section">
+          <div class="section-label" style="color:var(--green-t)">Que estuvo bien</div>
+          <ul class="eval-list">${(ev.que_estuvo_bien||[]).map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>
+        <div class="eval-section">
+          <div class="section-label" style="color:var(--amber-t)">Que mejorar</div>
+          <ul class="eval-list">${(ev.que_mejorar||[]).map(i=>`<li>${i}</li>`).join('')}</ul>
+        </div>`;
+      el.appendChild(card);
+      scrollDown();
+
+      const b = await botSay('Que deseas hacer ahora?');
+      b.appendChild(makeChips([
+        { key: 'siguiente', label: modoActual === 'diagnostico' ? 'Siguiente pregunta' : 'Nuevo escenario', cls: '' },
+        { key: 'menu',      label: 'Volver al menu', cls: '' }
+      ], item => {
+        waiting = false;
+        if (item.key === 'siguiente') {
+          if (modoActual === 'diagnostico') solicitarPreguntaDiagnostico();
+          else levantarEscenarioRAG();
+        } else {
+          msgs.innerHTML = '';
+          init();
+        }
+      }));
+
+    } catch (e) {
+      t.remove();
+      await botSay('Error al comunicarse con el evaluador. Verifica que el backend y Ollama esten corriendo.');
+      waiting = false; inp.disabled = false;
+    }
+  }
+
+  function ofrecerVolver(p) {
+    p.appendChild(makeChips([{ key: 'ini', label: 'Volver al menu', cls: '' }], () => {
+      msgs.innerHTML = '';
+      init();
+    }));
+    scrollDown();
+  }
+
+  inp.addEventListener('input', () => {
+    sendBtn.disabled = inp.value.trim().length === 0;
+    if (!sendBtn.disabled) sendBtn.classList.add('active');
+    else sendBtn.classList.remove('active');
+  });
+
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !waiting) { e.preventDefault(); procesarEnvio(); }
+  });
+
+  sendBtn.addEventListener('click', () => { if (!waiting) procesarEnvio(); });
+
+  init();
+</script>
 </body>
 </html>
