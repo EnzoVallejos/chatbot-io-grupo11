@@ -1,6 +1,6 @@
 # IO chatbot — Guía de instalación y ejecución
 
-Sistema de asistencia para el estudio de Investigación de Operaciones. Incluye guías teóricas, ejemplos resueltos, diagnóstico de conocimientos y práctica de modelado matemático.
+Chatbot para el estudio de Investigación de Operaciones. Incluye guías teóricas, ejemplos resueltos, diagnóstico de conocimientos y práctica de modelado.
 
 ---
 
