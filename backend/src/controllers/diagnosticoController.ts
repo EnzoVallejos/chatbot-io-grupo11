@@ -3,14 +3,12 @@ import { Request, Response } from "express";
 const OLLAMA_URL = "http://localhost:11434/api/generate";
 const MODEL = "mistral";
 
-// Estructura de pregunta fija extraída fielmente del contenido de data.md
 interface PreguntaTeorica {
   id: number;
   eje: string;
   pregunta: string;
 }
 
-// Banco de preguntas fijas, claras y concisas basadas exclusivamente en data.md
 const bancoPreguntas: PreguntaTeorica[] = [
   {
     id: 1,
@@ -53,7 +51,7 @@ async function callMistral(prompt: string): Promise<string> {
 }
 
 // GET /api/ejercicio/diagnostico
-// Devuelve una pregunta directa y concisa seleccionada al azar del banco fijo
+// Devuelve una pregunta seleccionada al azar del banco fijo
 export const obtenerPreguntaDiagnostico = async (_req: Request, res: Response): Promise<void> => {
   try {
     const preguntaElegida = bancoPreguntas[Math.floor(Math.random() * bancoPreguntas.length)];
