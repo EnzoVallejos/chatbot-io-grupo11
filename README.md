@@ -16,11 +16,11 @@ Descarga: https://nodejs.org
 Plataforma para ejecutar modelos de lenguaje de forma local.
 Descarga: https://ollama.com
 
-### Modelo de lenguaje (Mistral)
+### Modelo de lenguaje (gemma4)
 Una vez instalado Ollama, ejecutar el siguiente comando para descargar el modelo:
 
 ```
-ollama pull mistral
+ollama pull gemma4:e4b
 ```
 
 ---
@@ -43,7 +43,7 @@ Se deben tener activos dos procesos de forma simultánea. Se recomienda usar dos
 ### Terminal 1 — Modelo de lenguaje
 
 ```
-ollama run mistral
+ollama run gemma4:e4b
 ```
 ### Terminal 2 — Backend
 
