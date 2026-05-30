@@ -543,7 +543,7 @@
 
     if (modoActual === 'diagnostico') {
       url     = `${BASE}/api/ejercicio/evaluar-teoria`;
-      payload = { pregunta: datosEscenarioActivo.datos, respuestaEstudiante: val };
+      payload = { preguntaId: datosEscenarioActivo.id, respuestaEstudiante: val };
     }
 
     try {
