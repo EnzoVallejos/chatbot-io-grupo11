@@ -121,10 +121,6 @@ export const evaluarResolucion = async (req: Request, res: Response): Promise<vo
     const prompt = buildPrompt(tipo, escenario, resolucionSugerida, resolucion);
     const raw = await callModel(prompt);
 
-    console.log("--- RAW MODEL OUTPUT ---");
-    console.log(raw);
-    console.log("------------------------");
-
     const jsonStr = extractJSON(raw);
     if (!jsonStr) {
       console.error("No se encontró JSON en la respuesta.");
