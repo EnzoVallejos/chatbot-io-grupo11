@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+*.py[cod]
+model/chroma_db/
+frontend/package-lock.json

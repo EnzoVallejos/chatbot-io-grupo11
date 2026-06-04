@@ -334,6 +334,7 @@
   const sendBtn = document.getElementById('send-button');
 
   const MODOS = [
+    { key: 'consultas',   label: 'Consultas',      cls: '' },
     { key: 'guia',        label: 'Guia teorica',   cls: '' },
     { key: 'ejemplo',     label: 'Ver ejemplo',    cls: '' },
     { key: 'practica',    label: 'Practica',       cls: '' },
@@ -417,7 +418,9 @@
     b.appendChild(makeChips(MODOS, item => {
       addUserMsg(item.label);
       modoActual = item.key;
-      if (modoActual === 'diagnostico') {
+      if (modoActual === 'consultas') {
+        iniciarConsultas();
+      } else if (modoActual === 'diagnostico') {
         state = 'respuesta_teorica';
         solicitarPreguntaDiagnostico();
       } else {
@@ -425,6 +428,16 @@
         mostrarTipos();
       }
     }));
+  }
+
+  async function iniciarConsultas() {
+    const b = await botSay('Modo <strong>Consultas</strong>: hace tu pregunta sobre la teoria de la materia y respondo apoyandome en el material. Cuando quieras salir, toca "Volver al menu".');
+    ofrecerVolver(b);
+    state = 'consulta';
+    waiting = false;
+    inp.disabled = false;
+    inp.placeholder = 'Escribe tu pregunta aqui...';
+    inp.focus();
   }
 
   async function mostrarTipos() {
@@ -529,9 +542,63 @@
     }
   }
 
+  async function enviarConsulta(val) {
+    addUserMsg(val);
+    inp.value = ''; inp.disabled = true;
+    waiting = true;
+    const t = makeTyping();
+
+    try {
+      const res = await fetch(`${BASE}/api/consultas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pregunta: val })
+      });
+
+      const data = await res.json();
+      t.remove();
+
+      if (!res.ok) {
+        const b = await botSay(data.error || 'Error al consultar el modelo.');
+        ofrecerVolver(b);
+      } else {
+        const el = addBotMsg();
+        const b  = document.createElement('div');
+        b.className = 'bubble';
+        b.textContent = data.answer || '';
+
+        if (Array.isArray(data.fuentes) && data.fuentes.length) {
+          const rb = document.createElement('div');
+          rb.className = 'response-block';
+          rb.textContent = 'Fuentes utilizadas:\n' + data.fuentes
+            .map((f, i) => `  ${i + 1}. ${f.titulo} -> ${f.preview}`)
+            .join('\n');
+          b.appendChild(rb);
+        }
+        el.appendChild(b);
+        ofrecerVolver(b);
+        scrollDown();
+      }
+    } catch (e) {
+      t.remove();
+      const b = await botSay('Error al comunicarse con el servicio de consultas. Verifica que el backend y el servicio del modelo esten corriendo.');
+      ofrecerVolver(b);
+    }
+
+    waiting = false;
+    inp.disabled = false;
+    inp.placeholder = 'Escribe tu pregunta aqui...';
+    inp.focus();
+  }
+
   async function procesarEnvio() {
     const val = inp.value.trim();
     if (!val || waiting) return;
+
+    if (state === 'consulta') {
+      enviarConsulta(val);
+      return;
+    }
 
     addUserMsg(val);
     inp.value = ''; inp.disabled = true;

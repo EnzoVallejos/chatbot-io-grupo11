@@ -1,0 +1,11 @@
+# Servidor HTTP del modo Consultas
+fastapi
+uvicorn[standard]
+
+# Cadena RAG (LangChain + Ollama + Chroma + embeddings)
+langchain-core
+langchain-ollama
+langchain-chroma
+langchain-huggingface
+chromadb
+sentence-transformers

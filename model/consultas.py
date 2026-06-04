@@ -1,7 +1,7 @@
 """Modo 1: CONSULTAS.
 
 Responde preguntas sobre la teoría de Investigación Operativa apoyándose
-exclusivamente en el contenido de `data.md` (RAG sobre Chroma + Ollama).
+exclusivamente en el contenido de `io_rag_chunks.json` (RAG sobre Chroma + Ollama).
 
 Usa LCEL (LangChain Expression Language) en vez de la cadena legacy
 `RetrievalQA`, porque esa cadena hereda de una clase con un método `dict()`
@@ -98,7 +98,12 @@ def _format_sources(source_documents) -> str:
     lines = ["\n[Fuentes utilizadas]"]
     for i, doc in enumerate(source_documents, 1):
         meta = doc.metadata or {}
-        titulo = meta.get("h2") or meta.get("h1") or "(sin título)"
+        titulo = (
+            meta.get("section")
+            or meta.get("topic")
+            or meta.get("subtopic")
+            or "(sin título)"
+        )
         preview = doc.page_content.replace("\n", " ").strip()
         if len(preview) > 140:
             preview = preview[:140] + "..."

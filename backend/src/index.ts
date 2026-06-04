@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import guiaRouter from "./routes/guia";
 import ejemploRouter from "./routes/ejemplo";
 import ejercicioRouter from "./routes/ejercicio";
+import consultasRouter from "./routes/consultas";
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use("/api/guia", guiaRouter);
 app.use("/api/ejemplo", ejemploRouter);
 app.use("/api/ejercicio", ejercicioRouter);
+app.use("/api/consultas", consultasRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
@@ -27,6 +29,7 @@ app.listen(PORT, () => {
   console.log(`  GET  /api/ejemplo/:tipo`);
   console.log(`  GET  /api/ejercicio/escenario/:tipo`);
   console.log(`  POST /api/ejercicio/evaluar`);
+  console.log(`  POST /api/consultas`);
 });
 
 export default app;

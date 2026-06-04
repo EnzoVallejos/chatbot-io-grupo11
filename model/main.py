@@ -1,7 +1,7 @@
 """Punto de entrada del chatbot de IO - Grupo 11.
 
 Permite elegir entre los 3 modos del chatbot:
-  1) Consultas   -> RAG sobre data.md (teoría de la materia)
+  1) Consultas   -> RAG sobre io_rag_chunks.json (teoría de la materia)
   2) Diagnóstico -> identifica qué modelo de IO aplicar (en desarrollo)
   3) Práctica    -> ejercicios y corrección (en desarrollo)
 
@@ -26,7 +26,7 @@ MENU = f"""
  Chatbot IO - Grupo 11
  Modelo: {config.MODEL_NAME}
 ==========================================
- [1] Consultas   (basado en data.md)
+ [1] Consultas   (basado en io_rag_chunks.json)
  [2] Diagnóstico (en desarrollo)
  [3] Práctica    (en desarrollo)
  [0] Salir
