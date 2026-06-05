@@ -111,7 +111,7 @@
     }
 
     .msg-row.user .bubble {
-      background: var(--text);
+      background: #2563eb;
       color: #ffffff;
       border-bottom-right-radius: 3px;
     }
@@ -240,7 +240,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       display: flex;
-      align-items: center;
+      align-items: flex-end;
       padding: 2px 4px 2px 14px;
       transition: border-color 0.12s;
     }
@@ -249,7 +249,7 @@
       border-color: var(--border-hover);
     }
 
-    .input-wrapper input {
+    .input-wrapper textarea {
       flex: 1;
       background: transparent;
       border: none;
@@ -258,10 +258,15 @@
       font-family: var(--sans);
       font-size: 0.875rem;
       padding: 9px 0;
+      resize: none;
+      overflow-y: auto;
+      min-height: 38px;
+      max-height: 160px;
+      line-height: 1.5;
     }
 
-    .input-wrapper input::placeholder { color: var(--text-muted); }
-    .input-wrapper input:disabled { cursor: not-allowed; }
+    .input-wrapper textarea::placeholder { color: var(--text-muted); }
+    .input-wrapper textarea:disabled { cursor: not-allowed; }
 
     .send-btn {
       background: transparent;
@@ -269,12 +274,15 @@
       color: var(--text-muted);
       width: 34px;
       height: 34px;
+      min-height: 34px;
       border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.12s;
+      flex-shrink: 0;
+      margin-bottom: 2px;
     }
 
     .send-btn.active {
@@ -316,7 +324,7 @@
 
   <div class="input-container">
     <div class="input-wrapper">
-      <input type="text" id="chat-input" placeholder="Selecciona un modo para comenzar..." disabled />
+      <textarea id="chat-input" rows="1" placeholder="Selecciona un modo para comenzar..." disabled></textarea>
       <button class="send-btn" id="send-button" disabled>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"></line>
@@ -502,7 +510,7 @@
       await botSay('Ingresa las variables de decision, funcion objetivo y restricciones:');
       state = 'resolucion';
       inp.disabled = false;
-      inp.placeholder = 'Escribe tu resolucion aqui...';
+      inp.placeholder = 'Escribe tu resolucion...';
       inp.focus();
     } catch (e) {
       t.remove();
@@ -544,7 +552,7 @@
 
   async function enviarConsulta(val) {
     addUserMsg(val);
-    inp.value = ''; inp.disabled = true;
+    inp.value = ''; inp.style.height = 'auto'; inp.disabled = true;
     waiting = true;
     const t = makeTyping();
 
@@ -601,7 +609,7 @@
     }
 
     addUserMsg(val);
-    inp.value = ''; inp.disabled = true;
+    inp.value = ''; inp.style.height = 'auto'; inp.disabled = true;
     waiting = true;
     const t = makeTyping();
 
@@ -630,6 +638,24 @@
       const el   = addBotMsg();
       const card = document.createElement('div');
       card.className = 'eval-card';
+
+      // Helper para renderizar una subseccion de evaluacion por componente
+      function renderComponente(label, datos) {
+        if (!datos) return '';
+        const nota = datos.nota || datos.comentario || '';
+        return `
+          <div class="eval-section">
+            <div class="section-label">${label}</div>
+            <div class="section-comment">${nota}</div>
+          </div>`;
+      }
+
+      const seccionesComponentes = modoActual === 'practica' ? `
+        ${renderComponente('Variables de decision', ev.evaluacion_variables)}
+        ${renderComponente('Funcion objetivo', ev.evaluacion_fo)}
+        ${renderComponente('Restricciones', ev.evaluacion_restricciones)}
+      ` : '';
+
       card.innerHTML = `
         <div class="eval-header">
           <div class="eval-title">Evaluacion</div>
@@ -639,13 +665,10 @@
           <div class="section-label">Resumen</div>
           <div class="section-comment">${ev.resumen}</div>
         </div>
-        <div class="eval-section">
-          <div class="section-label" style="color:var(--green-t)">Que estuvo bien</div>
-          <ul class="eval-list">${(ev.que_estuvo_bien||[]).map(i=>`<li>${i}</li>`).join('')}</ul>
-        </div>
+        ${seccionesComponentes}
         <div class="eval-section">
           <div class="section-label" style="color:var(--amber-t)">Que mejorar</div>
-          <ul class="eval-list">${(ev.que_mejorar||[]).map(i=>`<li>${i}</li>`).join('')}</ul>
+          <ul class="eval-list">${(ev.mejoras||ev.que_mejorar||[]).map(i=>`<li>${i}</li>`).join('')}</ul>
         </div>`;
       el.appendChild(card);
       scrollDown();
@@ -684,10 +707,13 @@
     sendBtn.disabled = inp.value.trim().length === 0;
     if (!sendBtn.disabled) sendBtn.classList.add('active');
     else sendBtn.classList.remove('active');
+    // Auto-resize
+    inp.style.height = 'auto';
+    inp.style.height = Math.min(inp.scrollHeight, 160) + 'px';
   });
 
   inp.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !waiting) { e.preventDefault(); procesarEnvio(); }
+    if (e.key === 'Enter' && !e.shiftKey && !waiting) { e.preventDefault(); procesarEnvio(); }
   });
 
   sendBtn.addEventListener('click', () => { if (!waiting) procesarEnvio(); });
