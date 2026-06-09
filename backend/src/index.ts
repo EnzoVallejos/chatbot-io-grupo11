@@ -1,8 +1,7 @@
 import express, { Application, Request, Response, NextFunction } from "express";
-import guiaRouter from "./routes/guia";
 import ejemploRouter from "./routes/ejemplo";
 import ejercicioRouter from "./routes/ejercicio";
-import consultasRouter from "./routes/consultas";
+import ragRouter from "./routes/rag";
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
@@ -18,18 +17,18 @@ app.use((_req: Request, res: Response, next: NextFunction) => {
 app.use(express.json());
 
 // Routes
-app.use("/api/guia", guiaRouter);
 app.use("/api/ejemplo", ejemploRouter);
 app.use("/api/ejercicio", ejercicioRouter);
-app.use("/api/consultas", consultasRouter);
+app.use("/api/rag", ragRouter);
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`  GET  /api/guia/:tipo`);
   console.log(`  GET  /api/ejemplo/:tipo`);
   console.log(`  GET  /api/ejercicio/escenario/:tipo`);
   console.log(`  POST /api/ejercicio/evaluar`);
-  console.log(`  POST /api/consultas`);
+  console.log(`  GET  /api/ejercicio/diagnostico`);
+  console.log(`  POST /api/ejercicio/evaluar-teoria`);
+  console.log(`  POST /api/rag`);
 });
 
 export default app;
