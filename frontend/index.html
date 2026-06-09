@@ -342,8 +342,7 @@
   const sendBtn = document.getElementById('send-button');
 
   const MODOS = [
-    { key: 'consultas',   label: 'Consultas',      cls: '' },
-    { key: 'guia',        label: 'Guia teorica',   cls: '' },
+    { key: 'rag',         label: 'Teoria (RAG)',   cls: '' },
     { key: 'ejemplo',     label: 'Ver ejemplo',    cls: '' },
     { key: 'practica',    label: 'Practica',       cls: '' },
     { key: 'diagnostico', label: 'Diagnostico',    cls: '' }
@@ -426,8 +425,8 @@
     b.appendChild(makeChips(MODOS, item => {
       addUserMsg(item.label);
       modoActual = item.key;
-      if (modoActual === 'consultas') {
-        iniciarConsultas();
+      if (modoActual === 'rag') {
+        iniciarRAG();
       } else if (modoActual === 'diagnostico') {
         state = 'respuesta_teorica';
         solicitarPreguntaDiagnostico();
@@ -438,13 +437,61 @@
     }));
   }
 
-  async function iniciarConsultas() {
-    const b = await botSay('Modo <strong>Consultas</strong>: hace tu pregunta sobre la teoria de la materia y respondo apoyandome en el material. Cuando quieras salir, toca "Volver al menu".');
+  async function iniciarRAG() {
+    const b = await botSay('Modo <strong>Teoria RAG</strong>: hace tu pregunta sobre Investigacion de Operaciones y busco en el material de la materia los fragmentos mas relevantes para responderla.');
     ofrecerVolver(b);
-    state = 'consulta';
+    state = 'rag';
     waiting = false;
     inp.disabled = false;
-    inp.placeholder = 'Escribe tu pregunta aqui...';
+    inp.placeholder = 'Hace tu pregunta de teoria...';
+    inp.focus();
+  }
+
+  async function enviarRAG(val) {
+    addUserMsg(val);
+    inp.value = ''; inp.style.height = 'auto'; inp.disabled = true;
+    waiting = true;
+    const t = makeTyping();
+
+    try {
+      const res = await fetch(`${BASE}/api/rag`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pregunta: val })
+      });
+
+      const data = await res.json();
+      t.remove();
+
+      if (!res.ok) {
+        const b = await botSay(data.error || 'Error al consultar el RAG.');
+        ofrecerVolver(b);
+      } else {
+        const el = addBotMsg();
+        const b  = document.createElement('div');
+        b.className = 'bubble';
+        b.textContent = data.respuesta || '';
+
+        if (Array.isArray(data.fuentes) && data.fuentes.length) {
+          const rb = document.createElement('div');
+          rb.className = 'response-block';
+          rb.textContent = 'Fragmentos utilizados:\n' + data.fuentes
+            .map((f, i) => `  ${i + 1}. [${f.seccion}]\n     ${f.preview}`)
+            .join('\n\n');
+          b.appendChild(rb);
+        }
+        el.appendChild(b);
+        scrollDown();
+      }
+    } catch (e) {
+      t.remove();
+      const b = await botSay('Error al comunicarse con el RAG. Verifica que el backend y Ollama esten corriendo.');
+      ofrecerVolver(b);
+    }
+
+    waiting = false;
+    inp.disabled = false;
+    inp.placeholder = 'Hace tu pregunta de teoria...';
     inp.focus();
   }
 
@@ -605,6 +652,11 @@
 
     if (state === 'consulta') {
       enviarConsulta(val);
+      return;
+    }
+
+    if (state === 'rag') {
+      enviarRAG(val);
       return;
     }
 
